@@ -21,6 +21,7 @@
 #include "risu.h"
 #include "risu_reginfo_ppc64.h"
 
+#define FPSCR 32
 #define XER 37
 #define CCR 38
 
@@ -95,7 +96,7 @@ int reginfo_is_eq(struct reginfo *m, struct reginfo *a)
         return 0;
     }
 
-    for (i = 0; i < 32; i++) {
+    for (i = 0; i < NFPREG; i++) {
         if (isnan(m->fpregs[i]) && isnan(a->fpregs[i])) {
             continue;
         }
@@ -156,7 +157,7 @@ int reginfo_dump(struct reginfo *ri, FILE * f)
         fprintf(f, "\tf%2d: %.4f\tf%2d: %.4f\n", i, ri->fpregs[i],
                 i + 16, ri->fpregs[i + 16]);
     }
-    fprintf(f, "\tfpscr: %f\n\n", ri->fpregs[32]);
+    fprintf(f, "\tfpscr: 0x%lx\n\n", *(uint64_t*)&ri->fpregs[32]);
 
     for (i = 0; i < 32; i++) {
         fprintf(f, "vr%02d: %8x, %8x, %8x, %8x\n", i,
@@ -206,9 +207,17 @@ int reginfo_dump_mismatch(struct reginfo *m, struct reginfo *a, FILE *f)
 
         if (m->fpregs[i] != a->fpregs[i]) {
             fprintf(f, "Mismatch: Register f%d\n", i);
-            fprintf(f, "m: [%f] != a: [%f]\n", m->fpregs[i], a->fpregs[i]);
+            fprintf(f, "m: [0x%lx] != a: [0x%lx]\n",
+                    *(uint64_t*)&m->fpregs[i], *(uint64_t*)&a->fpregs[i]);
         }
     }
+
+    if (m->fpregs[FPSCR] != a->fpregs[FPSCR]) {
+        fprintf(f, "Mismatch: FPSCR\n");
+        fprintf(f, "m: [0x%lx] != a: [0x%lx]\n",
+                *(uint64_t*)&m->fpregs[FPSCR], *(uint64_t*)&a->fpregs[FPSCR]);
+    }
+
 
     for (i = 0; i < 32; i++) {
         if (m->vrregs.vrregs[i][0] != a->vrregs.vrregs[i][0] ||
