@@ -57,7 +57,8 @@ void reginfo_init(struct reginfo *ri, ucontext_t *uc)
     }
 
     memcpy(ri->fpregs, uc->uc_mcontext.fp_regs, 32 * sizeof(double));
-    ri->fpscr = uc->uc_mcontext.fp_regs[32];
+    memcpy(&ri->fpscr, &uc->uc_mcontext.fp_regs[32], sizeof(uint64_t));
+    ri->fpscr &= ~0x40000; /* ignore FR bit */
 
     memcpy(ri->vrregs.vrregs, uc->uc_mcontext.v_regs->vrregs,
            sizeof(ri->vrregs.vrregs[0]) * 32);
@@ -91,6 +92,10 @@ int reginfo_is_eq(struct reginfo *m, struct reginfo *a)
         if (m->fpregs[i] != a->fpregs[i]) {
             return 0;
         }
+    }
+
+    if (m->fpscr != a->fpscr) {
+        return 0;
     }
 
     for (i = 0; i < 32; i++) {
@@ -179,6 +184,11 @@ int reginfo_dump_mismatch(struct reginfo *m, struct reginfo *a, FILE *f)
             fprintf(f, "m: [%016lx] != a: [%016lx]\n",
                     m->fpregs[i], a->fpregs[i]);
         }
+    }
+
+    if (m->fpscr != a->fpscr) {
+        fprintf(f, "Mismatch: FPSCR\n");
+        fprintf(f, "m: [0x%016lx] != a: [0x%016lx]\n", m->fpscr, a->fpscr);
     }
 
     for (i = 0; i < 32; i++) {
