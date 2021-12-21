@@ -44,6 +44,7 @@ void reginfo_init(struct reginfo *ri, ucontext_t *uc)
     memset(ri, 0, sizeof(*ri));
 
     ri->faulting_insn = *((uint32_t *) uc->uc_mcontext.regs->nip);
+    ri->prev_insn = *((uint32_t *)(uc->uc_mcontext.regs->nip - 4));
     ri->nip = uc->uc_mcontext.regs->nip - image_start_address;
 
     for (i = 0; i < NGREG; i++) {
@@ -62,6 +63,14 @@ void reginfo_init(struct reginfo *ri, ucontext_t *uc)
     }
     ri->vrregs.vscr = uc->uc_mcontext.v_regs->vscr;
     ri->vrregs.vrsave = uc->uc_mcontext.v_regs->vrsave;
+
+    for (i = 0; i < 32; i++) {
+        /*
+         * "vmx_reserve is extended for backwards compatility to store VSR 0-31
+         * doubleword 1 after the VMX registers and vscr/vrsave."
+         */
+        ri->vsrreghalf[i] = uc->uc_mcontext.vmx_reserve[2 * NVRREG + 1 + i];
+    }
 }
 
 /* reginfo_is_eq: compare the reginfo structs, returns nonzero if equal */
@@ -104,6 +113,13 @@ int reginfo_is_eq(struct reginfo *m, struct reginfo *a)
             return 0;
         }
     }
+
+    for (i = 0; i < 32; i++) {
+        if (m->vsrreghalf[i] != a->vsrreghalf[i]) {
+            return 0;
+        }
+    }
+
     return 1;
 }
 
@@ -146,6 +162,13 @@ int reginfo_dump(struct reginfo *ri, FILE * f)
         fprintf(f, "vr%02d: %8x, %8x, %8x, %8x\n", i,
                 ri->vrregs.vrregs[i][0], ri->vrregs.vrregs[i][1],
                 ri->vrregs.vrregs[i][2], ri->vrregs.vrregs[i][3]);
+    }
+    fprintf(f, "vscr: %x\nvrsave: %x\n\n", ri->vrregs.vscr.vscr_word,
+            ri->vrregs.vrsave);
+
+    for (i = 0; i < 32; i++) {
+        fprintf(f, "vsr%02d: %16lx, %16lx\n", i, *(uint64_t *)&ri->fpregs[i],
+                ri->vsrreghalf[i]);
     }
 
     return !ferror(f);
@@ -201,5 +224,16 @@ int reginfo_dump_mismatch(struct reginfo *m, struct reginfo *a, FILE *f)
                     a->vrregs.vrregs[i][2], a->vrregs.vrregs[i][3]);
         }
     }
+
+    for (i = 0; i < 32; i++) {
+        if (m->vsrreghalf[i] != a->vsrreghalf[i]) {
+            fprintf(f, "Mismatch: Register vsr%d\n", i);
+            fprintf(f, "m: [%16lx, %16lx] != a: [%16lx, %16lx]\n",
+                    *(uint64_t *)&m->fpregs[i], m->vsrreghalf[i],
+                    *(uint64_t *)&a->fpregs[i], a->vsrreghalf[i]);
+            return 0;
+        }
+    }
+
     return !ferror(f);
 }
