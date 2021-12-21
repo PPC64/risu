@@ -22,6 +22,7 @@ struct reginfo {
     gregset_t gregs;
     fpregset_t fpregs;
     vrregset_t vrregs;
+    uint64_t vsrreghalf[32];
 };
 
 #endif /* RISU_REGINFO_PPC64LE_H */
