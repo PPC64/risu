@@ -65,6 +65,17 @@ void reginfo_init(struct reginfo *ri, ucontext_t *uc)
            sizeof(ri->vrregs.vrregs[0]) * 32);
     ri->vrregs.vscr = uc->uc_mcontext.v_regs->vscr;
     ri->vrregs.vrsave = uc->uc_mcontext.v_regs->vrsave;
+
+    for (i = 0; i < 32; i++) {
+        /*
+         * From sigcontext.h:
+         * "FPR/VSR 0-31 doubleword 0 is stored in fp_regs, and VMX/VSR 32-63
+         * is stored at the start of vmx_reserve.  vmx_reserve is extended for
+         * backwards compatility to store VSR 0-31 doubleword 1 after the VMX
+         * registers and vscr/vrsave."
+         */
+        ri->vsrreghalf[i] = uc->uc_mcontext.vmx_reserve[2 * NVRREG + 1 + i];
+    }
 }
 
 /* reginfo_is_eq: compare the reginfo structs, returns nonzero if equal */
@@ -108,6 +119,12 @@ int reginfo_is_eq(struct reginfo *m, struct reginfo *a)
             m->vrregs.vrregs[i][1] != a->vrregs.vrregs[i][1] ||
             m->vrregs.vrregs[i][2] != a->vrregs.vrregs[i][2] ||
             m->vrregs.vrregs[i][3] != a->vrregs.vrregs[i][3]) {
+            return 0;
+        }
+    }
+
+    for (i = 0; i < 32; i++) {
+        if (m->vsrreghalf[i] != a->vsrreghalf[i]) {
             return 0;
         }
     }
@@ -165,6 +182,11 @@ int reginfo_dump(struct reginfo *ri, FILE * f)
     }
     fprintf(f, "\tvscr: %8x\tvrsave: %8x\n", ri->vrregs.vscr.vscr_word,
             ri->vrregs.vrsave);
+
+    for (i = 0; i < 32; i++) {
+        fprintf(f, "vsr%02d: %16lx, %16lx\n", i, ri->fpregs[i],
+                ri->vsrreghalf[i]);
+    }
 
     return !ferror(f);
 }
@@ -237,6 +259,16 @@ int reginfo_dump_mismatch(struct reginfo *m, struct reginfo *a, FILE *f)
         fprintf(f, "Mismatch: VRSAVE\n");
         fprintf(f, "m: [%8x] != a: [%8x]\n", m->vrregs.vrsave,
                 a->vrregs.vrsave);
+    }
+
+    for (i = 0; i < 32; i++) {
+        if (m->vsrreghalf[i] != a->vsrreghalf[i]) {
+            fprintf(f, "Mismatch: Register vsr%d\n", i);
+            fprintf(f, "m: [%16lx, %16lx] != a: [%16lx, %16lx]\n",
+                    m->fpregs[i], m->vsrreghalf[i],
+                    a->fpregs[i], a->vsrreghalf[i]);
+            return 0;
+        }
     }
 
     return !ferror(f);

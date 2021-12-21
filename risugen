@@ -310,6 +310,7 @@ Valid options:
                    Useful to test before support for FP is available.
     --sve        : enable sve floating point
     --be         : generate instructions in Big-Endian byte order (ppc64 only).
+    --vsx        : initialize vector-scalar extension facility registers with random data (ppc64 only).
     --help       : print this message
 EOT
 }
@@ -321,6 +322,7 @@ sub main()
     my $fpscr = 0;
     my $fp_enabled = 1;
     my $sve_enabled = 0;
+    my $vsx_enabled = 0;
     my $big_endian = 0;
     my ($infile, $outfile);
 
@@ -337,6 +339,7 @@ sub main()
                     }
                 },
                 "be" => sub { $big_endian = 1; },
+                "vsx" => sub { $vsx_enabled = 1; },
                 "no-fp" => sub { $fp_enabled = 0; },
                 "sve" => sub { $sve_enabled = 1; },
         ) or return 1;
@@ -372,7 +375,8 @@ sub main()
         'keys' => \@insn_keys,
         'arch' => $full_arch[0],
         'subarch' => $full_arch[1] || '',
-        'bigendian' => $big_endian
+        'bigendian' => $big_endian,
+        'vsx_enabled' => $vsx_enabled
     );
 
     write_test_code(\%params);

@@ -152,6 +152,29 @@ sub write_random_ppc64_vrdata()
     }
 }
 
+sub write_random_ppc64_vsrdata()
+{
+    # Vector Status and Control Register
+    insn32(0x100004c4); # vxor vr0, vr0, vr0
+    insn32(0x10000644); # mtvscr vr0
+
+    # VR Save Register
+    write_mov_ri(0, rand(0xffffffff));
+    insn32(0x7c0043a6); # mtvrsave r0
+
+    for (my $i = 0; $i < 32; $i++) {
+        # load a random quadword value at r0
+        write_mov_ri128(rand(0xffffffff), rand(0xffffffff), rand(0xffffffff), rand(0xffffffff));
+        # lxv vsr[$i], 16(r1)
+        insn32((0x3d << 26) | ($i << 21) | (0x1 << 16) | (0x0 << 4) | 0x1);
+
+        # load another random quadword value at r0
+        write_mov_ri128(rand(0xffffffff), rand(0xffffffff), rand(0xffffffff), rand(0xffffffff));
+        # lxv vsr[$i+32], 16(r1)
+        insn32((0x3d << 26) | ($i << 21) | (0x1 << 16) | (0x1 << 4) | 0x1);
+    }
+}
+
 sub write_random_regdata()
 {
     # clear condition register
@@ -200,16 +223,20 @@ my $OP_SETMEMBLOCK = 2;    # r0 is address of memory block (8192 bytes)
 my $OP_GETMEMBLOCK = 3;    # add the address of memory block to r0
 my $OP_COMPAREMEM = 4;     # compare memory block
 
-sub write_random_register_data($)
+sub write_random_register_data($$)
 {
-    my ($fp_enabled) = @_;
+    my ($fp_enabled, $vsx_enabled) = @_;
 
     clear_vr_registers();
 
-    write_random_ppc64_vrdata();
-    if ($fp_enabled) {
-        # load floating point / SIMD registers
-        write_random_ppc64_fpdata();
+    if ($vsx_enabled) {
+        write_random_ppc64_vsrdata();
+    } else {
+        write_random_ppc64_vrdata();
+        if ($fp_enabled) {
+            # load floating point / SIMD registers
+            write_random_ppc64_fpdata();
+        }
     }
 
     write_random_regdata();
@@ -384,6 +411,7 @@ sub write_test_code($)
     my $condprob = $params->{ 'condprob' };
     my $numinsns = $params->{ 'numinsns' };
     my $fp_enabled = $params->{ 'fp_enabled' };
+    my $vsx_enabled = $params->{ 'vsx_enabled' };
     my $outfile = $params->{ 'outfile' };
 
     my %insn_details = %{ $params->{ 'details' } };
@@ -410,7 +438,7 @@ sub write_test_code($)
     }
 
     # memblock setup doesn't clean its registers, so this must come afterwards.
-    write_random_register_data($fp_enabled);
+    write_random_register_data($fp_enabled, $vsx_enabled);
 
     for my $i (1..$numinsns) {
         my $insn_enc = $keys[int rand (@keys)];
@@ -421,7 +449,7 @@ sub write_test_code($)
         # Rewrite the registers periodically. This avoids the tendency
         # for the VFP registers to decay to NaNs and zeroes.
         if ($periodic_reg_random && ($i % 100) == 0) {
-            write_random_register_data($fp_enabled);
+            write_random_register_data($fp_enabled, $vsx_enabled);
         }
         progress_update($i);
     }
