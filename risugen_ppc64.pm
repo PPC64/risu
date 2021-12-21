@@ -144,6 +144,16 @@ sub write_random_ppc64_vrdata()
     }
 }
 
+sub write_random_ppc64_vsrdata()
+{
+    for (my $i = 0; $i < 32; $i++) {
+        # load a random doubleword value at r0
+        write_mov_ri128(rand(0xffff), rand(0xffff), rand(0xfffff), rand(0xfffff));
+        # lxv vs$i, 16(r1)
+        insn32((0x3d << 26) | ($i << 21) | (0x1 << 16) | (0x1 << 4) | 0x1);
+    }
+}
+
 sub write_random_regdata()
 {
     # clear condition register
@@ -195,6 +205,7 @@ sub write_random_register_data($)
     if ($fp_enabled) {
         # load floating point / SIMD registers
         write_random_ppc64_fpdata();
+        write_random_ppc64_vsrdata();
     }
 
     write_random_regdata();
