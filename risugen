@@ -162,8 +162,8 @@ sub parse_config_file($)
 
         my $fixedbits = 0;
         my $fixedbitmask = 0;
-        my $bitpos = 32;
-        my $insnwidth = 32;
+        my $bitpos = 64;
+        my $insnwidth = 64;
         my $seenblock = 0;
 
         while (@bits) {
@@ -229,7 +229,10 @@ sub parse_config_file($)
                 push @fields, [ $var, $bitpos, $bitmask ];
             }
         }
-        if ($bitpos == 16) {
+        if ($bitpos == 32) {
+            # normal/non-prefixed instruction
+            $insnwidth = 32;
+        } elsif ($bitpos == 16) {
             # assume this is a half-width thumb instruction
             # Note that we don't fiddle with the bitmasks or positions,
             # which means the generated insn will be in the high halfword!

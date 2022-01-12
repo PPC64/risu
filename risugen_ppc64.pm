@@ -349,7 +349,19 @@ sub gen_one_insn($$)
             $basereg = eval_with_fields($insnname, $insn, $rec, "memory", $memblock);
         }
 
-        insn32($insn);
+        if ($insnwidth == 64) {
+            if((($bytecount+4) & 63) == 0) {
+                # Power v3.1, section 1.9 Exceptions:
+                # attempt to execute a prefixed instruction that crosses a
+                # 64-byte address boundary (system alignment error).
+                # Emit a NOP before the next prefixed instruction
+                insn32(0x60000000);
+            }
+            insn32($insn >> 32);
+            insn32($insn & 0xffffffff);
+        } else {
+            insn32($insn);
+        }
 
         if (defined $memblock) {
             # Clean up following a memory access instruction:
