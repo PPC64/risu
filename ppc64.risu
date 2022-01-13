@@ -1448,6 +1448,13 @@ ORI PPC64LE 011000 rs:5 ra:5 imm:16 \
 ORIS PPC64LE 011001 rs:5 ra:5 imm:16 \
 !constraints { $rs != 1 && $ra != 1 && $rs != 13 && $ra != 13; }
 
+# format:8LS:D book:I page:618 v3.1B plxsd Prefixed Load VSX Scalar Doubleword
+PLXSD PPC64LE 000001 00000 0 00 d0:18 \
+              101010 rt:5 ra:5 d1:16 \
+!constraints { $ra != 0 && $ra != 1 && $ra != 13 && \
+    $d0 <= 65535 && $d1 <= 32767 } \
+!memory { reg_plus_imm($ra, ($d0 << 16) | $d1); }
+
 # format:X book:I page:96 v2.02 popcntb Population Count Byte
 POPCNTB PPC64LE 011111 rs:5 ra:5 0000000011110100 \
 !constraints { $rs != 1 && $ra != 1 && $rs != 13 && $ra != 13; }
@@ -1467,6 +1474,13 @@ PRTYD PPC64LE 011111 rs:5 ra:5 0000000101110100 \
 # format:X book:I page:97 v2.05 prtyw Parity Word
 PRTYW PPC64LE 011111 rs:5 ra:5 0000000100110100 \
 !constraints { $rs != 1 && $ra != 1 && $rs != 13 && $ra != 13; }
+
+# format:8LS:D book:I page:646 v3.1B pstxsd Prefixed Store VSX Scalar Doubleword
+PSTXSD PPC64LE 000001 00000 0 00 d0:18 \
+              101110 rs:5 ra:5 d1:16 \
+!constraints { $ra != 0 && $ra != 1 && $ra != 13 && \
+    $d0 <= 65535 && $d1 <= 32767 } \
+!memory { reg_plus_imm($ra, ($d0 << 16) | $d1); }
 
 # format:MDS book:I page:103 PPC SR rldcl Rotate Left Dword then Clear Left
 RLDCL PPC64LE 011110 rs:5 ra:5 rb:5 mb:6 10000 \
