@@ -1455,6 +1455,13 @@ PLXSD PPC64LE 000001 00000 0 00 d0:18 \
     $d0 <= 65535 && $d1 <= 32767 } \
 !memory { reg_plus_imm($ra, ($d0 << 16) | $d1); }
 
+# format:8LS:D book:I page:623 v3.1B plxssp Prefixed Load VSX Scalar Single-Precision
+PLXSSP PPC64LE 000001 00000 0 00 d0:18 \
+               101011 rt:5 ra:5 d1:16 \
+!constraints { $ra != 0 && $ra != 1 && $ra != 13 && \
+    $d0 <= 65535 && $d1 <= 32767 } \
+!memory { reg_plus_imm($ra, ($d0 << 16) | $d1); }
+
 # format:X book:I page:96 v2.02 popcntb Population Count Byte
 POPCNTB PPC64LE 011111 rs:5 ra:5 0000000011110100 \
 !constraints { $rs != 1 && $ra != 1 && $rs != 13 && $ra != 13; }
@@ -1477,7 +1484,14 @@ PRTYW PPC64LE 011111 rs:5 ra:5 0000000100110100 \
 
 # format:8LS:D book:I page:646 v3.1B pstxsd Prefixed Store VSX Scalar Doubleword
 PSTXSD PPC64LE 000001 00000 0 00 d0:18 \
-              101110 rs:5 ra:5 d1:16 \
+               101110 rs:5 ra:5 d1:16 \
+!constraints { $ra != 0 && $ra != 1 && $ra != 13 && \
+    $d0 <= 65535 && $d1 <= 32767 } \
+!memory { reg_plus_imm($ra, ($d0 << 16) | $d1); }
+
+# format:8LS:D book:I page:650 v3.1B pstxssp Prefixed Store VSX Scalar Single-Precision
+PSTXSSP PPC64LE 000001 00000 0 00 d0:18 \
+                101111 rs:5 ra:5 d1:16 \
 !constraints { $ra != 0 && $ra != 1 && $ra != 13 && \
     $d0 <= 65535 && $d1 <= 32767 } \
 !memory { reg_plus_imm($ra, ($d0 << 16) | $d1); }
