@@ -308,7 +308,7 @@ sub gen_one_insn($$)
 
     INSN: while(1) {
         my ($forcecond, $rec) = @_;
-        my $insn = int(rand(0xffffffffffffffff));
+        my $insn = int(rand(0xffffffff)) << 32 | int(rand(0xffffffff));
         my $insnname = $rec->{name};
         my $insnwidth = $rec->{width};
         my $fixedbits = $rec->{fixedbits};
@@ -360,7 +360,7 @@ sub gen_one_insn($$)
             insn32($insn >> 32);
             insn32($insn & 0xffffffff);
         } else {
-            insn32($insn);
+            insn32($insn >> 32);
         }
 
         if (defined $memblock) {
