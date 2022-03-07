@@ -279,6 +279,9 @@ sub reg_plus_reg($$@)
     # li $rb, 32
     write_mov_ri($rb, 32);
 
+    if ($ra == $rb) {
+        return -1;
+    }
     return $ra
 }
 
