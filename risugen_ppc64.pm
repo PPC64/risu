@@ -170,6 +170,9 @@ sub clear_vr_registers()
     # zero the xer register
     # mtxer   r23
     insn32(0x7ee103a6);
+    # zero the ccr register
+    # mtcrf   0xff,r23
+    insn32(0x7eeff120);
     # std r23, 0(r22)
     insn32(0xfaf60000);
 
