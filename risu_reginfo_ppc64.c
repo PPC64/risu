@@ -96,7 +96,7 @@ int reginfo_is_eq(struct reginfo *m, struct reginfo *a)
         return 0;
     }
 
-    for (i = 0; i < NFPREG; i++) {
+    for (i = 0; i < 32; i++) {
         if (isnan(m->fpregs[i]) && isnan(a->fpregs[i])) {
             continue;
         }
@@ -104,6 +104,10 @@ int reginfo_is_eq(struct reginfo *m, struct reginfo *a)
         if (m->fpregs[i] != a->fpregs[i]) {
             return 0;
         }
+    }
+
+    if (*(uint64_t*)&m->fpregs[FPSCR] != *(uint64_t*)&a->fpregs[FPSCR]) {
+        return 0;
     }
 
     for (i = 0; i < 32; i++) {
@@ -157,7 +161,7 @@ int reginfo_dump(struct reginfo *ri, FILE * f)
         fprintf(f, "\tf%2d: %.4f\tf%2d: %.4f\n", i, ri->fpregs[i],
                 i + 16, ri->fpregs[i + 16]);
     }
-    fprintf(f, "\tfpscr: 0x%lx\n\n", *(uint64_t*)&ri->fpregs[32]);
+    fprintf(f, "\tfpscr: 0x%lx\n\n", *(uint64_t*)&ri->fpregs[FPSCR]);
 
     for (i = 0; i < 32; i++) {
         fprintf(f, "vr%02d: %8x, %8x, %8x, %8x\n", i,
