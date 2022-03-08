@@ -106,7 +106,7 @@ int reginfo_is_eq(struct reginfo *m, struct reginfo *a)
         }
     }
 
-    if (*(uint64_t*)&m->fpregs[FPSCR] != *(uint64_t*)&a->fpregs[FPSCR]) {
+    if (((*(uint64_t*)&m->fpregs[FPSCR])&~0x40000) != ((*(uint64_t*)&a->fpregs[FPSCR])&~0x40000)) {
         return 0;
     }
 
