@@ -54,7 +54,7 @@ ADDEdo PPC64LE 011111 rt:5 ra:5 rb:5 10100010101 \
 !constraints { $rt != 1 && $ra != 1 && $rb != 1 && $rt != 13 && $ra != 13 && $rb != 13; }
 
 # format:XO book:I page:110 v:2.06 addg6s Add & Generate Sixes
-ADDG6S PPC64LE 111111 rt:5 ra:5 rb:5 00010010100 \
+ADDG6S PPC64LE 011111 rt:5 ra:5 rb:5 0 001001010 0 \
 !constraints { $rt != 1 && $ra != 1 && $rb != 1 && $rt != 13 && $ra != 13 && $rb != 13; }
 
 # format:D book:I page:68 v:P1 addi Add Immediate
@@ -219,6 +219,12 @@ CNTLZD PPC64LE 011111 rs:5 ra:5 0000000001110100 \
 # format:X book:I page:98 PPC SR cntlzd. Count Leading Zeros Dword
 CNTLZDd PPC64LE 011111 rs:5 ra:5 0000000001110101 \
 !constraints { $rs != 1 && $ra != 1 && $rs != 13 && $ra != 13; }
+
+CNTLZDM PPC64LE 011111 rs:5 ra:5 rb:5 0000111011 0 \
+!constraints { $rs != 1 && $ra != 1 && $rb != 1 && $rs != 13 && $ra != 13 && $rb != 13;}
+
+CNTTZDM PPC64LE 011111 rs:5 ra:5 rb:5 1000111011 0 \
+!constraints { $rs != 1 && $ra != 1 && $rb != 1 && $rs != 13 && $ra != 13 && $rb != 13;}
 
 # format:X book:I page:95 v:P1 SR cntlzw Count Leading Zeros Word
 CNTLZW PPC64LE 011111 rs:5 ra:5 0000000000110100 \
@@ -1053,15 +1059,17 @@ LQ PPC64LE 111000 rtp:5 ra:5 imm:12 0000 \
 !constraints { $rtp % 2 == 0 && $rtp != 0 && $rtp != 12 && $ra != 1 && $ra != 13 && $ra != 0 && $ra != $rtp && $imm <= 2032; } \
 !memory { reg_plus_imm($ra, ($imm << 4) + 8); }
 
+# not supported in little-endian mode
 # format:X book:I page:65 v:P1 lswi Load String Word Immediate
-LSWI PPC64LE 011111 rt:5 ra:5 rb:5 10010101010 \
-!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
-!memory { reg_plus_reg($ra, $rb); }
+#LSWI PPC64LE 011111 rt:5 ra:5 rb:5 10010101010 \
+#!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
+#!memory { reg_plus_reg($ra, $rb); }
 
+# not supported in little-endian mode
 # format:X book:I page:65 v:P1 lswx Load String Word Indexed
-LSWX PPC64LE 011111 rt:5 ra:5 rb:5 10000101010 \
-!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
-!memory { reg_plus_reg($ra, $rb); }
+#LSWX PPC64LE 011111 rt:5 ra:5 rb:5 10000101010 \
+#!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
+#!memory { reg_plus_reg($ra, $rb); }
 
 # TODO remaining bytes of vrt are set to undefined values - cannot compare
 # format:X book:I page:244 v2.03 lvebx Load Vector Element Byte Indexed
@@ -1153,11 +1161,13 @@ LXSDX PPC64LE 011111 t:5 ra:5 rb:5 1001001100 tx:1 \
 
 # format:XX1 book:I page:483 v3.0 lxsibzx Load VSX Scalar as Integer Byte & Zero Indexed
 LXSIBZX PPC64LE 011111 t:5 ra:5 rb:5 1100001101 tx:1 \
-!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13; }
+!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
+!memory { reg_plus_reg($ra, $rb); }
 
 # format:XX1 book:I page:483 v3.0 lxsihzx Load VSX Scalar as Integer Hword & Zero Indexed
 LXSIHZX PPC64LE 011111 t:5 ra:5 rb:5 1100101101 tx:1 \
-!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13; }
+!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
+!memory { reg_plus_reg($ra, $rb); }
 
 # format:XX1 book:I page:484 v2.07 lxsiwax Load VSX Scalar as Integer Word Algebraic Indexed
 LXSIWAX PPC64LE 011111 t:5 ra:5 rb:5 0001001100 tx:1 \
@@ -1166,12 +1176,13 @@ LXSIWAX PPC64LE 011111 t:5 ra:5 rb:5 0001001100 tx:1 \
 
 # format:XX1 book:I page:485 v2.07 lxsiwzx Load VSX Scalar as Integer Word & Zero Indexed
 LXSIWZX PPC64LE 011111 t:5 ra:5 rb:5 0000001100 tx:1 \
-!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
+!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb && $ra != 0 && $ra != $rb; } \
 !memory { reg_plus_reg($ra, $rb); }
 
 # format:DS book:I page:486 v3.0 lxssp Load VSX Scalar Single
 LXSSP PPC64LE 111001 vrt:5 ra:5 imm:14 11 \
-!constraints { $ra != 1 && $ra != 13; }
+!constraints { $ra != 1 && $ra != 13 && $ra != 0; } \
+!memory { reg_plus_imm($ra, $imm << 2); }
 
 # format:XX1 book:I page:486 v2.07 lxsspx Load VSX Scalar SP Indexed
 LXSSPX PPC64LE 011111 t:5 ra:5 rb:5 1000001100 tx:1 \
@@ -1180,11 +1191,13 @@ LXSSPX PPC64LE 011111 t:5 ra:5 rb:5 1000001100 tx:1 \
 
 # format:DQ book:I page:493 v3.0 lxv Load VSX Vector
 LXV PPC64LE 111101 t:5 ra:5 imm:12 001 tx:1 \
-!constraints { $ra != 1 && $ra != 13; }
+!constraints { $ra != 1 && $ra != 13; } \
+!memory { reg_plus_imm($ra, $imm); }
 
 # format:XX1 book:I page:488 v3.0 lxvb16x Load VSX Vector Byte*16 Indexed
 LXVB16X PPC64LE 011111 t:5 ra:5 rb:5 1101101100 tx:1 \
-!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13; }
+!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
+!memory { reg_plus_reg($ra, $rb); }
 
 # format:XX1 book:I page:489 v2.06 lxvd2x Load VSX Vector Dword*2 Indexed
 LXVD2X PPC64LE 011111 t:5 ra:5 rb:5 1101001100 tx:1 \
@@ -1198,15 +1211,34 @@ LXVDSX PPC64LE 011111 t:5 ra:5 rb:5 0101001100 tx:1 \
 
 # format:XX1 book:I page:496 v3.0 lxvh8x Load VSX Vector Hword*8 Indexed
 LXVH8X PPC64LE 011111 t:5 ra:5 rb:5 1100101100 tx:1 \
-!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13; }
+!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
+!memory { reg_plus_reg($ra, $rb); }
 
 # format:XX1 book:I page:490 v3.0 lxvl Load VSX Vector with Length
 LXVL PPC64LE 011111 t:5 ra:5 rb:5 0100001101 tx:1 \
-!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13; }
+!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
+!memory { reg_plus_reg($ra, $rb); }
 
 # format:XX1 book:I page:492 v3.0 lxvll Load VSX Vector Left-justified with Length
 LXVLL PPC64LE 011111 t:5 ra:5 rb:5 0100101101 tx:1 \
-!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13; }
+!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
+!memory { reg_plus_reg($ra, $rb); }
+
+LXVRBX PPC64LE 011111 t:5 ra:5 rb:5 0000001101 tx:1 \
+!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
+!memory { reg_plus_reg($ra, $rb); }
+
+LXVRHX PPC64LE 011111 t:5 ra:5 rb:5 0000101101 tx:1 \
+!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
+!memory { reg_plus_reg($ra, $rb); }
+
+LXVRWX PPC64LE 011111 t:5 ra:5 rb:5 0001001101 tx:1 \
+!constraints { $ra != $rb && $ra != 0 && $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13; } \
+!memory { reg_plus_reg($ra, $rb); }
+
+LXVRDX PPC64LE 011111 t:5 ra:5 rb:5 0001101101 tx:1 \
+!constraints { $ra != $rb && $ra != 0 && $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13; } \
+!memory { reg_plus_reg($ra, $rb); }
 
 # format:XX1 book:I page:497 v2.06 lxvw4x Load VSX Vector Word*4 Indexed
 LXVW4X PPC64LE 011111 t:5 ra:5 rb:5 1100001100 tx:1 \
@@ -1215,11 +1247,13 @@ LXVW4X PPC64LE 011111 t:5 ra:5 rb:5 1100001100 tx:1 \
 
 # format:XX1 book:I page:498 v3.0 lxvwsx Load VSX Vector Word & Splat Indexed
 LXVWSX PPC64LE 011111 t:5 ra:5 rb:5 0101101100 tx:1 \
-!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13; }
+!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
+!memory { reg_plus_reg($ra, $rb); }
 
 # format:XX1 book:I page:493 v3.0 lxvx Load VSX Vector Indexed
 LXVX PPC64LE 011111 t:5 ra:5 rb:5 0100001100 tx:1 \
-!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13; }
+!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
+!memory { reg_plus_reg($ra, $rb); }
 
 # format:VA book:I page:81 v3.0 maddhd Multiply-Add High Dword
 MADDHD PPC64LE 000100 rt:5 ra:5 rb:5 rc:5 110000 \
@@ -1448,6 +1482,14 @@ ORI PPC64LE 011000 rs:5 ra:5 imm:16 \
 ORIS PPC64LE 011001 rs:5 ra:5 imm:16 \
 !constraints { $rs != 1 && $ra != 1 && $rs != 13 && $ra != 13; }
 
+PLXSD PPC64LE 000001 00 000 0 00 000000000000000000 101010 vrt:5 ra:5 d1:16   \
+!constraints { $ra != 1 && $ra != 13 && $ra != 0 && $d1 <= 32752; } \
+!memory { reg_plus_imm($ra, $d1); }
+
+PLXSSP PPC64LE 000001 00 000 0 00 000000000000000000 101011 vrt:5 ra:5 d1:16  \
+!constraints { $ra != 1 && $ra != 13 && $ra != 0 && $d1 <= 32752;} \
+!memory { reg_plus_imm($ra, $d1); }
+
 # format:X book:I page:96 v2.02 popcntb Population Count Byte
 POPCNTB PPC64LE 011111 rs:5 ra:5 0000000011110100 \
 !constraints { $rs != 1 && $ra != 1 && $rs != 13 && $ra != 13; }
@@ -1467,6 +1509,14 @@ PRTYD PPC64LE 011111 rs:5 ra:5 0000000101110100 \
 # format:X book:I page:97 v2.05 prtyw Parity Word
 PRTYW PPC64LE 011111 rs:5 ra:5 0000000100110100 \
 !constraints { $rs != 1 && $ra != 1 && $rs != 13 && $ra != 13; }
+
+PSTXSD PPC64LE 000001 00 000 0 00 000000000000000000 101110 vrt:5 ra:5 d1:16 \
+!constraints { $ra != 1 && $ra != 13 && $ra != 0 && $d1 <= 32752; } \
+!memory { reg_plus_imm($ra, $d1); }
+
+PSTXSSP PPC64LE 000001 00 000 0 00 000000000000000000 101111 vrt:5 ra:5 d1:16 \
+!constraints { $ra != 1 && $ra != 13 && $ra != 0 && $d1 <= 32752; } \
+!memory { reg_plus_imm($ra, $d1); }
 
 # format:MDS book:I page:103 PPC SR rldcl Rotate Left Dword then Clear Left
 RLDCL PPC64LE 011110 rs:5 ra:5 rb:5 mb:6 10000 \
@@ -1724,25 +1774,26 @@ STHX PPC64LE 011111 rs:5 ra:5 rb:5 01100101110 \
 
 # STMW is not supported in little-endian mode
 # format:D book:I page:63 v:P1 stmw Store Multiple Word
-STMW PPC64BE 101111 rt:5 ra:5 imm:16 \
-!constraints { $rt != 1 && $ra != 1 && $rt != 13 && $ra != 13 && $ra != 0 && $imm <= 32752; } \
-!memory { reg_plus_imm($ra, $imm); }
+#STMW PPC64BE 101111 rt:5 ra:5 imm:16 \
+#!constraints { $rt != 1 && $ra != 1 && $rt != 13 && $ra != 13 && $ra != 0 && $imm <= 32752; } \
+#!memory { reg_plus_imm($ra, $imm); }
 
 # STSWI is not supported in little-endian mode
 # format:X book:I page:66 v:P1 stswi Store String Word Immediate
-STSWI PPC64BE 011111 rs:5 ra:5 rb:5 10110101010 \
-!constraints { $rs != 1 && $ra != 1 && $rs != 13 && $ra != 13 && $rs != $ra && $ra != 0; } \
-!memory { reg_plus_imm($ra, 0); }
+#STSWI PPC64BE 011111 rs:5 ra:5 rb:5 10110101010 \
+#!constraints { $rs != 1 && $ra != 1 && $rs != 13 && $ra != 13 && $rs != $ra && $ra != 0; } \
+#!memory { reg_plus_imm($ra, 0); }
 
 # format:DS book:I page:60 v2.03 stq Store Qword
 STQ PPC64BE 111110 rsp:5 ra:5 imm:14 10 \
 !constraints { $rsp % 2 == 0 && $ra != 1 && $ra != 13 && $ra != 0 && $rsp != $ra && $imm <= 8176; } \
 !memory { reg_plus_imm($ra, $imm << 2); }
 
+# STSWX is not supported in little-endian mode
 # format:X book:I page:66 v:P1 stswx Store String Word Indexed
-STSWX PPC64LE 011111 rs:5 ra:5 rb:5 10100 101010 \
-!constraints { $rs != 1 && $ra != 1 && $rb != 1 && $rs != 13 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rs && $ra != $rb && $rs != $rb; } \
-!memory { reg_plus_reg($ra, $rb); }
+#STSWX PPC64LE 011111 rs:5 ra:5 rb:5 10100 101010 \
+#!constraints { $rs != 1 && $ra != 1 && $rb != 1 && $rs != 13 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rs && $ra != $rb && $rs != $rb; } \
+#!memory { reg_plus_reg($ra, $rb); }
 
 # format:X book:I page:247 v2.03 stvebx Store Vector Element Byte Indexed
 STVEBX PPC64LE 011111 vrs:5 ra:5 rb:5 00100001110 \
@@ -1795,9 +1846,9 @@ STWX PPC64LE 011111 rs:5 ra:5 rb:5 00100101110 \
 !memory { reg_plus_reg($ra, $rb); }
 
 # format:DS book:I page:499 v3.0 stxsd Store VSX Scalar Dword
-STXSD PPC64LE 111101 vrs:5 ra:5 imm:14 10 \
-!constraints { $ra != 1 && $ra != 13 && $ra != 0 && $imm <= 4000; } \
-!memory { reg_plus_imm($ra, $imm << 2); }
+STXSD PPC64LE 111101 vrs:5 ra:5 ds:14 10 \
+!constraints { $ra != 1 && $ra != 13 && $ra != 0 && $ds <= 4000; } \
+!memory { reg_plus_imm($ra, ($ds >> 2)); }
 
 # format:XX1 book:I page:499 v2.06 stxsdx Store VSX Scalar Dword Indexed
 STXSDX PPC64LE 011111 s:5 ra:5 rb:5 1011001100 sx:1 \
@@ -1806,11 +1857,13 @@ STXSDX PPC64LE 011111 s:5 ra:5 rb:5 1011001100 sx:1 \
 
 # format:XX1 book:I page:500 v3.0 stxsibx Store VSX Scalar as Integer Byte Indexed
 STXSIBX PPC64LE 011111 s:5 ra:5 rb:5 11100 01101 sx:1 \
-!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13; }
+!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
+!memory { reg_plus_reg($ra, $rb); }
 
 # format:XX1 book:I page:500 v3.0 stxsihx Store VSX Scalar as Integer Hword Indexed
 STXSIHX PPC64LE 011111 s:5 ra:5 rb:5 11101 01101 sx:1 \
-!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13; }
+!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
+!memory { reg_plus_reg($ra, $rb); }
 
 # format:XX1 book:I page:501 v2.07 stxsiwx Store VSX Scalar as Integer Word Indexed
 STXSIWX PPC64LE 011111 s:5 ra:5 rb:5 00100 01100 sx:1 \
@@ -1829,11 +1882,13 @@ STXSSPX PPC64LE 011111 s:5 ra:5 rb:5 10100 01100 sx:1 \
 
 # format:DQ book:I page:508 v3.0 stxv Store VSX Vector
 STXV PPC64LE 111101 s:5 ra:5 imm:12 dx:1 101 \
-!constraints { $ra != 1 && $ra != 13; }
+!constraints { $ra != 1 && $ra != 13; } \
+!memory { reg_plus_imm($ra, $imm << 4); }
 
 # format:XX1 book:I page:504 v3.0 stxvb16x Store VSX Vector Byte*16 Indexed
 STXVB16X PPC64LE 011111 s:5 ra:5 rb:5 11111 01100 sx:1 \
-!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13; }
+!constraints { $ra != 2 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
+!memory { reg_plus_reg($ra, $rb); }
 
 # format:XX1 book:I page:505 v2.06 stxvd2x Store VSX Vector Dword*2 Indexed
 STXVD2X PPC64LE 011111 s:5 ra:5 rb:5 11110 01100 sx:1 \
@@ -1842,15 +1897,34 @@ STXVD2X PPC64LE 011111 s:5 ra:5 rb:5 11110 01100 sx:1 \
 
 # format:XX1 book:I page:506 v3.0 stxvh8x Store VSX Vector Hword*8 Indexed
 STXVH8X PPC64LE 011111 s:5 ra:5 rb:5 11101 01100 sx:1 \
-!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13; }
+!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
+!memory { reg_plus_reg($ra, $rb); }
 
 # format:XX1 book:I page:508 v3.0 stxvl Store VSX Vector with Length
 STXVL PPC64LE 011111 s:5 ra:5 rb:5 01100 01101 sx:1 \
-!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13; }
+!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
+!memory { reg_plus_reg($ra, $rb); }
 
 # format:XX1 book:I page:510 v3.0 stxvll Store VSX Vector Left-justified with Length
 STXVLL PPC64LE 011111 s:5 ra:5 rb:5 01101 01101 sx:1 \
-!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13; }
+!constraints { $ra != 0 && $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
+!memory { reg_plus_reg($ra, $rb); }
+
+STXVRBX PPC64LE 011111 s:5 ra:5 rb:5 0010001101 sx:1 \
+!constraints { $ra != 0 && $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
+!memory { reg_plus_reg($ra, $rb); }
+
+STXVRHX PPC64LE 011111 s:5 ra:5 rb:5 0010101101 sx:1 \
+!constraints { $ra != $rb && $ra != 0 && $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13; } \
+!memory { reg_plus_reg($ra, $rb); }
+
+STXVRWX PPC64LE 011111 s:5 ra:5 rb:5 0011001101 sx:1 \
+!constraints { $ra != $rb && $ra != 0 && $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13; } \
+!memory { reg_plus_reg($ra, $rb); }
+
+STXVRDX PPC64LE 011111 s:5 ra:5 rb:5 0011101101 sx:1 \
+!constraints { $ra != 0 && $ra != $rb && $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13; } \
+!memory { reg_plus_reg($ra, $rb); }
 
 # format:XX1 book:I page:507 v2.06 stxvw4x Store VSX Vector Word*4 Indexed
 STXVW4X PPC64LE 011111 s:5 ra:5 rb:5 11100 01100 sx:1 \
@@ -1859,11 +1933,13 @@ STXVW4X PPC64LE 011111 s:5 ra:5 rb:5 11100 01100 sx:1 \
 
 # format:XX1 book:I page:511 v3.0 stxvx Store VSX Vector Indexed
 STXVX PPC64LE 011111 s:5 ra:5 rb:5 01100 01100 sx:1 \
-!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13; }
+!constraints { $ra != 0 && $ra != $rb && $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13; } \
+!memory { reg_plus_reg($ra, $rb); }
 
 # format:XO book:I page:70 PPC SR subf[o][.] Subtract From
 SUBF PPC64LE 011111 rt:5 ra:5 rb:5 00001010000 \
 !constraints { $rt != 1 && $ra != 1 && $rb != 1 && $rt != 13 && $ra != 13 && $rb != 13; }
+
 # format:XO book:I page:70 PPC SR subf[o][.] Subtract From
 SUBFd PPC64LE 011111 rt:5 ra:5 rb:5 00001010001 \
 !constraints { $rt != 1 && $ra != 1 && $rb != 1 && $rt != 13 && $ra != 13 && $rb != 13; }
@@ -2088,6 +2164,11 @@ VCMPEQUH PPC64LE 000100 vrt:5 vra:5 vrb:5 00001000110
 # format:VC book:I page:306 v2.03 vcmpequh[.] Vector Compare Equal Unsigned Hword
 VCMPEQUHd PPC64LE 000100 vrt:5 vra:5 vrb:5 10001000110
 
+# format:VC book:I page:392 v3.1 vcmpequq[.] Vector Compare Equal Unsigned Word
+VCMPEQUQ PPC64LE 000100 vrt:5 vra:5 vrb:5 00111000111
+# format:VC book:I page:392 v3.1 vcmpequq[.] Vector Compare Equal Unsigned Word
+VCMPEQUQd PPC64LE 000100 vrt:5 vra:5 vrb:5 10111000111
+
 # format:VC book:I page:307 v2.03 vcmpequw[.] Vector Compare Equal Unsigned Word
 VCMPEQUW PPC64LE 000100 vrt:5 vra:5 vrb:5 00010000110
 # format:VC book:I page:307 v2.03 vcmpequw[.] Vector Compare Equal Unsigned Word
@@ -2118,6 +2199,11 @@ VCMPGTSH PPC64LE 000100 vrt:5 vra:5 vrb:5 01101000110
 # format:VC book:I page:309 v2.03 vcmpgtsh[.] Vector Compare Greater Than Signed Hword
 VCMPGTSHd PPC64LE 000100 vrt:5 vra:5 vrb:5 11101000110
 
+# format:VC book:I page:397 v3.1 vcmpgtsq[.] Vector Compare Greater Than Signed Qword
+VCMPGTSQ PPC64LE 000100 vrt:5 vra:5 vrb:5 01110000111
+# format:VC book:I page:397 v3.1 vcmpgtsq[.] Vector Compare Greater Than Signed Qword
+VCMPGTSQd PPC64LE 000100 vrt:5 vra:5 vrb:5 11110000111
+
 # format:VC book:I page:309 v2.03 vcmpgtsw[.] Vector Compare Greater Than Signed Word
 VCMPGTSW PPC64LE 000100 vrt:5 vra:5 vrb:5 01110000110
 # format:VC book:I page:309 v2.03 vcmpgtsw[.] Vector Compare Greater Than Signed Word
@@ -2137,6 +2223,11 @@ VCMPGTUDd PPC64LE 000100 vrt:5 vra:5 vrb:5 11011000111
 VCMPGTUH PPC64LE 000100 vrt:5 vra:5 vrb:5 01001000110
 # format:VC book:I page:311 v2.03 vcmpgtuh[.] Vector Compare Greater Than Unsigned Hword
 VCMPGTUHd PPC64LE 000100 vrt:5 vra:5 vrb:5 11001000110
+
+# format:VC book:I page:397 v3.1 vcmpgtuh[.] Vector Compare Greater Than Unsigned Qword
+VCMPGTUQ PPC64LE 000100 vrt:5 vra:5 vrb:5 01010000111
+# format:VC book:I page:397 v3.1 vcmpgtuh[.] Vector Compare Greater Than Unsigned Qword
+VCMPGTUQd PPC64LE 000100 vrt:5 vra:5 vrb:5 11010000111
 
 # format:VC book:I page:311 v2.03 vcmpgtuw[.] Vector Compare Greater Than Unsigned Word
 VCMPGTUW PPC64LE 000100 vrt:5 vra:5 vrb:5 01010000110
@@ -2172,6 +2263,20 @@ VCMPNEZHd PPC64LE 000100 vrt:5 vra:5 vrb:5 10101000111
 VCMPNEZW PPC64LE 000100 vrt:5 vra:5 vrb:5 00110000111
 # format:VC book:I page:314 v3.0 vcmpnezw[.] Vector Compare Not Equal or Zero Word
 VCMPNEZWd PPC64LE 000100 vrt:5 vra:5 vrb:5 10110000111
+
+# format:VC book:I page:401 v3.1 vcmpsq Vector Compare Signed Quadword
+VCMPSQ PPC64LE 000100 bf:3 00 vrt:5 vra:5 00101000001
+# format:VC book:I page:401 v3.1 vcmpsq Vector Compare Unsigned Quadword
+VCMPUQ PPC64LE 000100 bf:3 00 vrt:5 vra:5 00100000001
+
+VCNTMBB PPC64LE 000100 rt:5 1100 mp:1 vrb:5 11001000010 \
+!constraints { $rt != 1 && $rt != 13; }
+VCNTMBH PPC64LE 000100 rt:5 1101 mp:1 vrb:5 11001000010 \
+!constraints { $rt != 1 && $rt != 13; }
+VCNTMBW PPC64LE 000100 rt:5 1110 mp:1 vrb:5 11001000010 \
+!constraints { $rt != 1 && $rt != 13; }
+VCNTMBD PPC64LE 000100 rt:5 1111 mp:1 vrb:5 11001000010 \
+!constraints { $rt != 1 && $rt != 13; }
 
 # format:VX book:I page:327 v2.03 vctsxs Vector Convert To Signed Word Saturate
 VCTSXS PPC64LE 000100 vrt:5 uim:5 vrb:5 01111001010
@@ -2254,6 +2359,9 @@ VEXTUWRX PPC64LE 000100 rt:5 ra:5 vrb:5 11110001101 \
 
 # format:VX book:I page:342 v2.07 vgbbd Vector Gather Bits by Byte by Dword
 VGBBD PPC64LE 000100 vrt:5 00000 vrb:5 10100001100
+
+VGNB PPC64LE 000100 rt:5 00 n:3 vrb:5 10011001100 \
+!constraints { $rt != 1 && $rt != 13 && $n > 1; }
 
 # format:VX book:I page:270 v3.0 vinsertb Vector Insert Byte
 VINSERTB PPC64LE 000100 vrt:5 0 uim:4 vrb:5 01100001101
@@ -2360,6 +2468,8 @@ VMRGOW PPC64LE 000100 vrt:5 vra:5 vrb:5 11010001100
 # format:VA book:I page:288 v2.03 vmladduhm Vector Multiply-Low-Add Unsigned Hword Modulo
 VMLADDUHM PPC64LE 000100 vrt:5 vra:5 vrb:5 vrc:5 100010
 
+VMSUMCUD PPC64LE 000100 vrt:5 vra:5 vrb:5 vrc:5 010111
+
 # format:VA book:I page:289 v2.03 vmsummbm Vector Multiply-Sum Mixed Byte Modulo
 VMSUMMBM PPC64LE 000100 vrt:5 vra:5 vrb:5 vrc:5 100101
 
@@ -2371,6 +2481,8 @@ VMSUMSHS PPC64LE 000100 vrt:5 vra:5 vrb:5 vrc:5 101001
 
 # format:VA book:I page:288 v2.03 vmsumubm Vector Multiply-Sum Unsigned Byte Modulo
 VMSUMUBM PPC64LE 000100 vrt:5 vra:5 vrb:5 vrc:5 100100
+
+VMSUMUDM PPC64LE 000100 vrt:5 vra:5 vrb:5 vrc:5 100011
 
 # format:VA book:I page:290 v2.03 vmsumuhm Vector Multiply-Sum Unsigned Hword Modulo
 VMSUMUHM PPC64LE 000100 vrt:5 vra:5 vrb:5 vrc:5 100110
@@ -2393,6 +2505,8 @@ VMUL10UQ PPC64LE 000100 vrt:5 vra:5 0000001000000001
 # format:VX book:I page:283 v2.03 vmulesb Vector Multiply Even Signed Byte
 VMULESB PPC64LE 000100 vrt:5 vra:5 vrb:5 01100001000
 
+VMULESD PPC64LE 000100 vrt:5 vra:5 vrb:5 01111001000
+
 # format:VX book:I page:284 v2.03 vmulesh Vector Multiply Even Signed Hword
 VMULESH PPC64LE 000100 vrt:5 vra:5 vrb:5 01101001000
 
@@ -2402,14 +2516,24 @@ VMULESW PPC64LE 000100 vrt:5 vra:5 vrb:5 01110001000
 # format:VX book:I page:283 v2.03 vmuleub Vector Multiply Even Unsigned Byte
 VMULEUB PPC64LE 000100 vrt:5 vra:5 vrb:5 01000001000
 
+VMULEUD PPC64LE 000100 vrt:5 vra:5 vrb:5 01011001000
+
 # format:VX book:I page:284 v2.03 vmuleuh Vector Multiply Even Unsigned Hword
 VMULEUH PPC64LE 000100 vrt:5 vra:5 vrb:5 01001001000
 
 # format:VX book:I page:285 v2.07 vmuleuw Vector Multiply Even Unsigned Word
 VMULEUW PPC64LE 000100 vrt:5 vra:5 vrb:5 01010001000
 
+VMULHSW PPC64LE 000100 vrt:5 vra:5 vrb:5 01110001001
+VMULHUW PPC64LE 000100 vrt:5 vra:5 vrb:5 01010001001
+VMULHSD PPC64LE 000100 vrt:5 vra:5 vrb:5 01111001001
+VMULHUD PPC64LE 000100 vrt:5 vra:5 vrb:5 01011001001
+VMULLD PPC64LE 000100 vrt:5 vra:5 vrb:5 00111001001
+
 # format:VX book:I page:283 v2.03 vmulosb Vector Multiply Odd Signed Byte
 VMULOSB PPC64LE 000100 vrt:5 vra:5 vrb:5 00100001000
+
+VMULOSD PPC64LE 000100 vrt:5 vra:5 vrb:5 00111001000
 
 # format:VX book:I page:284 v2.03 vmulosh Vector Multiply Odd Signed Hword
 VMULOSH PPC64LE 000100 vrt:5 vra:5 vrb:5 00101001000
@@ -2419,6 +2543,8 @@ VMULOSW PPC64LE 000100 vrt:5 vra:5 vrb:5 00110001000
 
 # format:VX book:I page:283 v2.03 vmuloub Vector Multiply Odd Unsigned Byte
 VMULOUB PPC64LE 000100 vrt:5 vra:5 vrb:5 00000001000
+
+VMULOUD PPC64LE 000100 vrt:5 vra:5 vrb:5 00011001000
 
 # format:VX book:I page:284 v2.03 vmulouh Vector Multiply Odd Unsigned Hword
 VMULOUH PPC64LE 000100 vrt:5 vra:5 vrb:5 00001001000
@@ -2567,6 +2693,10 @@ VRLDNM PPC64LE 000100 vrt:5 vra:5 vrb:5 00111000101
 # format:VX book:I page:318 v2.03 vrlh Vector Rotate Left Hword
 VRLH PPC64LE 000100 vrt:5 vra:5 vrb:5 00001000100
 
+VRLQ PPC64LE 000100 vrt:5 vra:5 vrb:5 00000000101
+VRLQMI PPC64LE 000100 vrt:5 vra:5 vrb:5 00001000101
+VRLQNM PPC64LE 000100 vrt:5 vra:5 vrb:5 00101000101
+
 # format:VX book:I page:318 v2.03 vrlw Vector Rotate Left Word
 VRLW PPC64LE 000100 vrt:5 vra:5 vrb:5 00010000100
 
@@ -2594,6 +2724,9 @@ VSHASIGMAW PPC64LE 000100 vrt:5 vra:5 vrb:5 11010000010
 # format:VX book:I page:266 v2.03 vsl Vector Shift Left
 VSL PPC64LE 000100 vrt:5 vra:5 vrb:5 00111000100
 
+# format:VN boot:I page:298 v3.1 vsldbi Vector Shift Left Double by Bit Immediate
+VSLDBI PPC64LE 000100 vrt:5 vra:5 vrb:5 00 sh:3 010110
+
 # format:VX book:I page:319 v2.03 vslb Vector Shift Left Byte
 VSLB PPC64LE 000100 vrt:5 vra:5 vrb:5 00100000100
 
@@ -2608,6 +2741,9 @@ VSLH PPC64LE 000100 vrt:5 vra:5 vrb:5 00101000100
 
 # format:VX book:I page:266 v2.03 vslo Vector Shift Left by Octet
 VSLO PPC64LE 000100 vrt:5 vra:5 vrb:5 10000001100
+
+# format:VSX book:I ... TODO
+VSLQ PPC64LE 000100 vrt:5 vra:5 vrb:5 00100000101
 
 # format:X book:I page:267 v3.0 vslv Vector Shift Left Variable
 VSLV PPC64LE 000100 vrt:5 vra:5 vrb:5 11101000100
@@ -2636,6 +2772,9 @@ VSPLTW PPC64LE 000100 vrt:5 000 uim:2 vrb:5 01010001100
 # format:VX book:I page:266 v2.03 vsr Vector Shift Right
 VSR PPC64LE 000100 vrt:5 vra:5 vrb:5 01011000100
 
+# format:VN boot:I page:299 v3.1 vsrdbi Vector Shift Right Double by Bit Immediate
+VSRDBI PPC64LE 000100 vrt:5 vra:5 vrb:5 01 sh:3 010110
+
 # format:VX book:I page:321 v2.03 vsrab Vector Shift Right Algebraic Byte
 VSRAB PPC64LE 000100 vrt:5 vra:5 vrb:5 01100000100
 
@@ -2644,6 +2783,8 @@ VSRAD PPC64LE 000100 vrt:5 vra:5 vrb:5 01111000100
 
 # format:VX book:I page:321 v2.03 vsrah Vector Shift Right Algebraic Hword
 VSRAH PPC64LE 000100 vrt:5 vra:5 vrb:5 01101000100
+
+VSRAQ PPC64LE 000100 vrt:5 vra:5 vrb:5 01100000101
 
 # format:VX book:I page:321 v2.03 vsraw Vector Shift Right Algebraic Word
 VSRAW PPC64LE 000100 vrt:5 vra:5 vrb:5 01110000100
@@ -2660,11 +2801,23 @@ VSRH PPC64LE 000100 vrt:5 vra:5 vrb:5 01001000100
 # format:VX book:I page:266 v2.03 vsro Vector Shift Right by Octet
 VSRO PPC64LE 000100 vrt:5 vra:5 vrb:5 10001001100
 
+VSRQ PPC64LE 000100 vrt:5 vra:5 vrb:5 01000000101
+
 # format:X book:I page:267 v3.0 vsrv Vector Shift Right Variable
 VSRV PPC64LE 000100 vrt:5 vra:5 vrb:5 11100000100
 
 # format:VX book:I page:320 v2.03 vsrw Vector Shift Right Word
 VSRW PPC64LE 000100 vrt:5 vra:5 vrb:5 01010000100
+
+VSTRIBL PPC64LE 000100 vrt:5 00000 vrb:5 rc:1 0000001101
+VSTRIBR PPC64LE 000100 vrt:5 00001 vrb:5 rc:1 0000001101
+VSTRIHL PPC64LE 000100 vrt:5 00010 vrb:5 rc:1 0000001101
+VSTRIHR PPC64LE 000100 vrt:5 00011 vrb:5 rc:1 0000001101
+
+VCLRLB  PPC64LE 000100 vrt:5 vra:5 rb:5 00110001101 \
+!constraints { $rb != 1 && $rb != 13; }
+VCLRRB  PPC64LE 000100 vrt:5 vra:5 rb:5 00111001101 \
+!constraints { $rb != 1 && $rb != 13; }
 
 # format:VX book:I page:281 v2.07 vsubcuq Vector Subtract & write Carry Unsigned Qword
 VSUBCUQ PPC64LE 000100 vrt:5 vra:5 vrb:5 10101000000
@@ -2794,6 +2947,10 @@ XSADDSP PPC64LE 111100 t:5 a:5 b:5 00000000 ax:1 bx:1 tx:1
 # format:XX3 book:I page:525 v3.0 xscmpeqdp VSX Scalar Compare Equal Double-Precision
 XSCMPEQDP PPC64LE 111100 t:5 a:5 b:5 00000011 ax:1 bx:1 tx:1
 
+XSCMPEQQP PPC64LE 111111 vrt:5 vra:5 vrb:5 0001000100 0
+XSCMPGEQP PPC64LE 111111 vrt:5 vra:5 vrb:5 0011000100 0
+XSCMPGTQP PPC64LE 111111 vrt:5 vra:5 vrb:5 0011100100 0
+
 # format:XX3 book:I page:523 v3.0 xscmpexpdp VSX Scalar Compare Exponents DP
 XSCMPEXPDP PPC64LE 111100 bf:3 00 a:5 b:5 00111011 ax:1 bx:1 0
 
@@ -2868,8 +3025,12 @@ XSCVQPSWZ PPC64LE 111111 vrt:5 01001 vrb:5 11010 001000
 # format:X book:I page:554 v3.0 xscvqpudz VSX Scalar Convert QP to Unsigned Dword truncate
 XSCVQPUDZ PPC64LE 111111 vrt:5 10001 vrb:5 11010 001000
 
+XSCVQPUQZ PPC64LE 111111 vrt:5 00000 vrb:5 1101000100 0
+
 # format:X book:I page:556 v3.0 xscvqpuwz VSX Scalar Convert QP to Unsigned Word truncate
 XSCVQPUWZ PPC64LE 111111 vrt:5 00001 vrb:5 11010 001000
+
+XSCVQPSQZ PPC64LE 111111 vrt:5 01000 vrb:5 1101000100 0
 
 # format:X book:I page:558 v3.0 xscvsdqp VSX Scalar Convert Signed Dword to QP
 XSCVSDQP PPC64LE 111111 vrt:5 01010 vrb:5 11010 001000
@@ -2879,6 +3040,10 @@ XSCVSPDP PPC64LE 111100 t:5 00000 b:5 10100 1001 bx:1 tx:1
 
 # format:XX2 book:I page:560 v2.07 xscvspdpn VSX Scalar Convert SP to DP Non-signalling
 XSCVSPDPN PPC64LE 111100 t:5 00000 b:5 10100 1011 bx:1 tx:1
+
+XSCVSQQP PPC64LE 111111 vrt:5 01011 vrb:5 1101000100 0
+
+XSCVUQQP PPC64LE 111111 vrt:5 00011 vrb:5 1101000100 0
 
 # format:XX2 book:I page:561 v2.06 xscvsxddp VSX Scalar Convert Signed Dword to DP
 XSCVSXDDP PPC64LE 111100 t:5 00000 b:5 10111 1000 bx:1 tx:1
@@ -2933,6 +3098,8 @@ XSMADDQPo PPC64LE 111111 vrt:5 vra:5 vrb:5 01100 001001
 # format:XX3 book:I page:583 v3.0 xsmaxcdp VSX Scalar Maximum Type-C Double-Precision
 XSMAXCDP PPC64LE 111100 t:5 a:5 b:5 10000000 ax:1 bx:1 tx:1
 
+XSMAXCQP PPC64LE 111111 vrt:5 vra:5 vrb:5 1010100100 0
+
 # format:XX3 book:I page:581 v2.06 xsmaxdp VSX Scalar Maximum DP
 XSMAXDP PPC64LE 111100 t:5 a:5 b:5 10100000 ax:1 bx:1 tx:1
 
@@ -2944,6 +3111,8 @@ XSMINCDP PPC64LE 111100 t:5 a:5 b:5 10001000 ax:1 bx:1 tx:1
 
 # format:XX3 book:I page:587 v2.06 xsmindp VSX Scalar Minimum DP
 XSMINDP PPC64LE 111100 t:5 a:5 b:5 10101000 ax:1 bx:1 tx:1
+
+XSMINCQP PPC64LE 111111 vrt:5 vra:5 vrb:5 1011100100 0
 
 # format:XX3 book:I page:591 v3.0 xsminjdp VSX Scalar Minimum Type-J Double-Precision
 XSMINJDP PPC64LE 111100 t:5 a:5 b:5 10011000 ax:1 bx:1 tx:1
@@ -3006,10 +3175,10 @@ XSNMADDQP PPC64LE 111111 vrt:5 vra:5 vrb:5 01110001000
 XSNMADDQPo PPC64LE 111111 vrt:5 vra:5 vrb:5 01110001001
 
 # format:XX3 book:I page:621 v2.06 xsnmsubadp VSX Scalar Negative Multiply-Subtract Type-A DP
-XSNMSUBSDP PPC64LE 111100 t:5 a:5 b:5 10110001 ax:1 bx:1 tx:1
+XSNMSUBADP PPC64LE 111100 t:5 a:5 b:5 10110001 ax:1 bx:1 tx:1
 
 # format:XX3 book:I page:624 v2.07 xsnmsubasp VSX Scalar Negative Multiply-Subtract Type-A SP
-XSNMSUBSAP PPC64LE 111100 t:5 a:5 b:5 10010001 ax:1 bx:1 tx:1
+XSNMSUBASP PPC64LE 111100 t:5 a:5 b:5 10010001 ax:1 bx:1 tx:1
 
 # format:XX3 book:I page:621 v2.06 xsnmsubmdp VSX Scalar Negative Multiply-Subtract Type-M DP
 XSNMSUBMDP PPC64LE 111100 t:5 a:5 b:5 10111001 ax:1 bx:1 tx:1
@@ -3382,6 +3551,8 @@ XVTDIVDP PPC64LE 111100  bf:3 00 a:5 b:5 01111101 ax:1 bx:1 0
 # format:XX3 book:I page:762 v2.06 xvtdivsp VSX Vector Test for software Divide SP
 XVTDIVSP PPC64LE 111100  bf:3 00 a:5 b:5 01011101 ax:1 bx:1 0
 
+XVTLSBB PPC64LE 111100 bf:3 00 00010 b:5 111011011 bx:1 0
+
 # format:XX2 book:I page:763 v2.06 xvtsqrtdp VSX Vector Test for software Square Root DP
 XVTSQRTDP PPC64LE 111100 bf:3 0000000 b:5 011101010 bx:1 0
 
@@ -3418,8 +3589,16 @@ XXBRQ PPC64LE 111100 t:5 11111 b:5 111011011 bx:1 tx:1
 # format:XX2 book:I page:769 v3.0 xxbrw VSX Vector Byte-Reverse Word
 XXBRW PPC64LE 111100 t:5 01111 b:5 111011011 bx:1 tx:1
 
+XXEVAL PPC64LE 000001 01 0000 00 0000000000 imm:8       \
+               100010 t:5 a:5 b:5 c:5 01 cx:1 ax:1 bx:1 tx:1
+
 # format:XX2 book:I page:770 v3.0 xxextractuw VSX Vector Extract Unsigned Word
 XXEXTRACTUW PPC64LE 111100 t:5 0 uim:4 b:5 010100101 bx:1 tx:1
+
+XXGENPCVBM PPC64LE 111100 t:5 000 imm:2 vrb:5 1110010100 tx:1
+XXGENPCVHM PPC64LE 111100 t:5 000 imm:2 vrb:5 1110010101 tx:1
+XXGENPCVWM PPC64LE 111100 t:5 000 imm:2 vrb:5 1110110100 tx:1
+XXGENPCVDM PPC64LE 111100 t:5 000 imm:2 vrb:5 1110110101 tx:1
 
 # format:XX2 book:I page:770 v3.0 xxinsertw VSX Vector Insert Word
 XXINSERTW PPC64LE 111100 t:5 0 uim:4 b:5 010110101 bx:1 tx:1
@@ -3463,6 +3642,9 @@ XXPERMDI PPC64LE 111100 t:5 a:5 b:5 0 dm:2 01010 ax:1 bx:1 tx:1
 # format:XX3 book:I page:776 v3.0 xxpermr VSX Vector Permute Right-indexed
 XXPERMR PPC64LE 111100 t:5 a:5 b:5 00111010 ax:1 bx:1 tx:1
 
+XXPERMX PPC64LE 000001 01 0000 00 000000000000000 uim:3 \
+                100010 t:5 a:5 b:5 c:5 00 cx:1 ax:1 bx:1 tx:1
+
 # format:XX4 book:I page:777 v2.06 xxsel VSX Vector Select
 XXSEL PPC64LE 111100 t:5 a:5 b:5 c:5 11 cx:1 ax:1 bx:1 tx:1
 
@@ -3474,3 +3656,102 @@ XXSPLTIB PPC64LE 111100 t:5 00 imm:8 0101101000 tx:1
 
 # format:XX2 book:I page:778 v2.06 xxspltw VSX Vector Splat Word
 XXSPLTW PPC64LE 111100 t:5 000 uim:2 b:5 010100100 bx:1 tx:1
+
+# format:XX3  book:I page 883 v3.1 xvi4ger8 VSX Vector 4-bit Signed Integer GER (rank-8 update)
+XVI4GER8 PPC64LE 111011 at:3 00 a:5 b:5 00100011 ax:1 bx:1 0    \
+!constraints { $at != ((($ax << 5) | $a) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+# format:XX3  book:I page 883 v3.1 xvi4ger8pp VSX Vector 4-bit Signed Integer GER (rank-8 update) Positive multiply, Positive accumulate
+XVI4GER8PP PPC64LE 111011 at:3 00 a:5 b:5 00100010 ax:1 bx:1 0    \
+!constraints { $at != ((($ax << 5) | $a) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+# format:XX3  book:I page 886 v3.1 xvi8ger4 VSX Vector 8-bit Signed/Unsigned Integer GER (rank-4 update)
+XVI8GER4 PPC64LE 111011 at:3 00 a:5 b:5 00000011 ax:1 bx:1 0    \
+!constraints { $at != ((($ax << 5) | $a) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+# format:XX3  book:I page 886 v3.1 xvi8ger4pp VSX Vector 8-bit Signed/Unsigned Integer GER (rank-4 update) Positive multiply, Positive accumulate
+XVI8GER4PP PPC64LE 111011 at:3 00 a:5 b:5 00000010 ax:1 bx:1 0    \
+!constraints { $at != ((($ax << 5) | $a) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+# format:XX3  book:I page 890 v3.1 xvi8ger4spp VSX Vector 8-bit Signed/Unsigned Integer GER (rank-4 update) with Saturate Positive multiply, Positive accumulate
+XVI8GER4SPP PPC64LE 111011 at:3 00 a:5 b:5 01100011 ax:1 bx:1 0    \
+!constraints { $at != ((($ax << 5) | $a) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+# format:XX3  book:I page 891 v3.1 xvi16ger2 VSX Vector 16-bit Signed Integer GER (rank-2 update)
+XVI16GER2 PPC64LE 111011 at:3 00 a:5 b:5 01001011 ax:1 bx:1 0    \
+!constraints { $at != ((($ax << 5) | $a) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+# format:XX3  book:I page 891 v3.1 xvi16ger2pp VSX Vector 16-bit Signed Integer GER (rank-2 update) Positive multiply, Positive accumulate
+XVI16GER2PP PPC64LE 111011 at:3 00 a:5 b:5 01101011 ax:1 bx:1 0    \
+!constraints { $at != ((($ax << 5) | $a) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+# format:XX3  book:I page 893 v3.1 xvi16ger2s VSX Vector 16-bit Signed Integer GER (rank-2 update) with Saturation
+XVI16GER2S PPC64LE 111011 at:3 00 a:5 b:5 00101011 ax:1 bx:1 0    \
+!constraints { $at != ((($ax << 5) | $a) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+# format:XX3  book:I page 893 v3.1 xvi16ger2s VSX Vector 16-bit Signed Integer GER (rank-2 update) with Saturation Positive multiply, Positive accumulate
+XVI16GER2SPP PPC64LE 111011 at:3 00 a:5 b:5 00101010 ax:1 bx:1 0    \
+!constraints { $at != ((($ax << 5) | $a) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+XVBF16GER2   PPC64LE 111011 at:3 00 a:5 b:5 00110011 ax:1 bx:1 0 \
+!constraints { $at != ((($ax << 5) | $a) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+XVBF16GER2PP PPC64LE 111011 at:3 00 a:5 b:5 00110010 ax:1 bx:1 0 \
+!constraints { $at != ((($ax << 5) | $a) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+XVBF16GER2PN PPC64LE 111011 at:3 00 a:5 b:5 10110010 ax:1 bx:1 0 \
+!constraints { $at != ((($ax << 5) | $a) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+XVBF16GER2NP PPC64LE 111011 at:3 00 a:5 b:5 01110010 ax:1 bx:1 0 \
+!constraints { $at != ((($ax << 5) | $a) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+XVBF16GER2NN PPC64LE 111011 at:3 00 a:5 b:5 11110010 ax:1 bx:1 0 \
+!constraints { $at != ((($ax << 5) | $a) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+XVF16GER2    PPC64LE 111011 at:3 00 a:5 b:5 00010011 ax:1 bx:1 0 \
+!constraints { $at != ((($ax << 5) | $a) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+XVF16GER2PP  PPC64LE 111011 at:3 00 a:5 b:5 00010010 ax:1 bx:1 0 \
+!constraints { $at != ((($ax << 5) | $a) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+XVF16GER2PN  PPC64LE 111011 at:3 00 a:5 b:5 10010010 ax:1 bx:1 0 \
+!constraints { $at != ((($ax << 5) | $a) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+XVF16GER2NP  PPC64LE 111011 at:3 00 a:5 b:5 01010010 ax:1 bx:1 0 \
+!constraints { $at != ((($ax << 5) | $a) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+XVF16GER2NN  PPC64LE 111011 at:3 00 a:5 b:5 11010010 ax:1 bx:1 0 \
+!constraints { $at != ((($ax << 5) | $a) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+XVF32GER     PPC64LE 111011 at:3 00 a:5 b:5 00011011 ax:1 bx:1 0 \
+!constraints { $at != ((($ax << 5) | $a) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+XVF32GERPP   PPC64LE 111011 at:3 00 a:5 b:5 00011010 ax:1 bx:1 0 \
+!constraints { $at != ((($ax << 5) | $a) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+XVF32GERPN   PPC64LE 111011 at:3 00 a:5 b:5 10011010 ax:1 bx:1 0 \
+!constraints { $at != ((($ax << 5) | $a) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+XVF32GERNP   PPC64LE 111011 at:3 00 a:5 b:5 01011010 ax:1 bx:1 0 \
+!constraints { $at != ((($ax << 5) | $a) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+XVF32GERNN   PPC64LE 111011 at:3 00 a:5 b:5 11011010 ax:1 bx:1 0 \
+!constraints { $at != ((($ax << 5) | $a) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+XVF64GER     PPC64LE 111011 at:3 00 ap:4 0 b:5 00111011 ax:1 bx:1 0 \
+!constraints { $at != ((($ax << 5) | ($ap << 1)) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+XVF64GERPP   PPC64LE 111011 at:3 00 ap:4 0 b:5 00111010 ax:1 bx:1 0 \
+!constraints { $at != ((($ax << 5) | ($ap << 1)) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+XVF64GERPN   PPC64LE 111011 at:3 00 ap:4 0 b:5 10111010 ax:1 bx:1 0 \
+!constraints { $at != ((($ax << 5) | ($ap << 1)) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+XVF64GERNP   PPC64LE 111011 at:3 00 ap:4 0 b:5 01111010 ax:1 bx:1 0 \
+!constraints { $at != ((($ax << 5) | ($ap << 1)) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+XVF64GERNN   PPC64LE 111011 at:3 00 ap:4 0 b:5 11111010 ax:1 bx:1 0 \
+!constraints { $at != ((($ax << 5) | ($ap << 1)) >> 2) && $at != ((($bx << 5) | $b) >> 2) ; }
+
+#PADDI PPC64LE 000001 10 000 r:1 00 si0:18 001110 rt:5 ra:5 si1:16 \
+#!constraints { $rt != 1 && $ra != 1 && $rt != 13 && $ra != 13; }
