@@ -271,9 +271,11 @@ DADD PPC64LE 111011 frt:5 fra:5 frb:5 00000000100
 DADDd PPC64LE 111011 frt:5 fra:5 frb:5 00000000101
 
 # format:X book:I page:195 v2.05 daddq DFP Add Quad
-DADDQ PPC64LE 111111 frtp:5 frap:5 frbp:5 00000000100
+DADDQ PPC64LE 111111 frtp:5 frap:5 frbp:5 00000000100 \
+!constraints { $frtp % 2 == 0 && $frap % 2 == 0 && $frbp % 2 == 0; }
 # format:X book:I page:195 v2.05 daddq. DFP Add Quad
-DADDQd PPC64LE 111111 frtp:5 frap:5 frbp:5 00000000101
+DADDQd PPC64LE 111111 frtp:5 frap:5 frbp:5 00000000101 \
+!constraints { $frtp % 2 == 0 && $frap % 2 == 0 && $frbp % 2 == 0; }
 
 # format:X book:I page:79 v3.0 darn Deliver A Random Number
 DARN PPC64LE 011111 rt:5 000 l:2 0000010111100110 \
@@ -285,21 +287,25 @@ DCFFIX PPC64LE 111011 frt:5 00000 frb:5 11001000100
 DCFFIXd PPC64LE 111011 frt:5 00000 frb:5 11001000101
 
 # format:X book:I page:217 v2.05 dcffixq DFP Convert From Fixed Quad
-DCFFIXQ PPC64LE 111111 frt:5 00000 frbp:5 11001000100
+DCFFIXQ PPC64LE 111111 frt:5 00000 frbp:5 11001000100 \
+!constraints { $frbp % 2 == 0; }
 # format:X book:I page:217 v2.05 dcffixq. DFP Convert From Fixed Quad
-DCFFIXQd PPC64LE 111111 frt:5 00000 frbp:5 11001000101
+DCFFIXQd PPC64LE 111111 frt:5 00000 frbp:5 11001000101 \
+!constraints { $frbp % 2 == 0; }
 
 # format:X book:I page:201 v2.05 dcmpo DFP Compare Ordered
 DCMPO PPC64LE 111011 bf:3 00 fra:5 frb:5 00100000100
 
 # format:X book:I page:201 v2.05 dcmpoq DFP Compare Ordered Quad
-DCMPOQ PPC64LE 111111 bf:3 00 frap:5 frbp:5 00100000100
+DCMPOQ PPC64LE 111111 bf:3 00 frap:5 frbp:5 00100000100 \
+!constraints { $frap % 2 == 0 && $frbp % 2 == 0; }
 
 # format:X book:I page:200 v2.05 dcmpu DFP Compare Unordered
 DCMPU PPC64LE 111011 bf:3 00 fra:5 frb:5 10100000100
 
 # format:X book:I page:200 v2.05 dcmpuq DFP Compare Unordered Quad
-DCMPUQ PPC64LE 111111 bf:3 00 frap:5 frbp:5 10100000100
+DCMPUQ PPC64LE 111111 bf:3 00 frap:5 frbp:5 10100000100 \
+!constraints { $frap % 2 == 0 && $frbp % 2 == 0; }
 
 # format:X book:I page:215 v2.05 dctdp DFP Convert To DFP Long
 DCTDP PPC64LE 111011 frt:5 00000 frb:5 01000000100
@@ -317,9 +323,11 @@ DCTFIXQ PPC64LE 111111 frt:5 00000 frbq:5 01001000100
 DCTFIXQd PPC64LE 111111 frt:5 00000 frbq:5 01001000101
 
 # format:X book:I page:215 v2.05 dctqpq DFP Convert To DFP Extended
-DCTQPQ PPC64LE 111111 frtp:5 00000 frb:5 01000000100
+DCTQPQ PPC64LE 111111 frtp:5 00000 frb:5 01000000100 \
+!constraints { $frtp % 2 == 0; }
 # format:X book:I page:215 v2.05 dctqpq. DFP Convert To DFP Extended
-DCTQPQd PPC64LE 111111 frtp:5 00000 frb:5 01000000101
+DCTQPQd PPC64LE 111111 frtp:5 00000 frb:5 01000000101 \
+!constraints { $frtp % 2 == 0; }
 
 # format:X book:I page:219 v2.05 ddedpd DFP Decode DPD To BCD
 DDEDPD PPC64LE 111011 frt:5 sp:2 000 frb:5 01010000100
@@ -327,9 +335,11 @@ DDEDPD PPC64LE 111011 frt:5 sp:2 000 frb:5 01010000100
 DDEDPDd PPC64LE 111011 frt:5 sp:2 000 frb:5 01010000101
 
 # format:X book:I page:219 v2.05 ddedpdq DFP Decode DPD To BCD Quad
-DDEDPDQ PPC64LE 111111 frtp:5 sp:2 000 frbp:5 01010000100
+DDEDPDQ PPC64LE 111111 frtp:5 sp:2 000 frbp:5 01010000100 \
+!constraints { $frtp % 2 == 0 && $frbp % 2 == 0; }
 # format:X book:I page:219 v2.05 ddedpdq. DFP Decode DPD To BCD Quad
-DDEDPDQd PPC64LE 111111 frtp:5 sp:2 000 frbp:5 01010000101
+DDEDPDQd PPC64LE 111111 frtp:5 sp:2 000 frbp:5 01010000101 \
+!constraints { $frtp % 2 == 0 && $frbp % 2 == 0; }
 
 # format:X book:I page:198 v2.05 ddiv DFP Divide
 DDIV PPC64LE 111011 frt:5 fra:5 frb:5 10001000100
@@ -337,9 +347,11 @@ DDIV PPC64LE 111011 frt:5 fra:5 frb:5 10001000100
 DDIVd PPC64LE 111011 frt:5 fra:5 frb:5 10001000101
 
 # format:X book:I page:198 v2.05 ddivq DFP Divide Quad
-DDIVQ PPC64LE 111111 frtp:5 frap:5 frbp:5 10001000100
+DDIVQ PPC64LE 111111 frtp:5 frap:5 frbp:5 10001000100 \
+!constraints { $frtp % 2 == 0 && $frap % 2 == 0 && $frbp % 2 == 0; }
 # format:X book:I page:198 v2.05 ddivq. DFP Divide Quad
-DDIVQd PPC64LE 111111 frtp:5 frap:5 frbp:5 10001000101
+DDIVQd PPC64LE 111111 frtp:5 frap:5 frbp:5 10001000101 \
+!constraints { $frtp % 2 == 0 && $frap % 2 == 0 && $frbp % 2 == 0; }
 
 # format:X book:I page:219 v2.05 denbcd DFP Encode BCD To DPD
 DENBCD PPC64LE 111011 frt:5 s:1 0000 frb:5 11010000100
@@ -347,9 +359,11 @@ DENBCD PPC64LE 111011 frt:5 s:1 0000 frb:5 11010000100
 DENBCDd PPC64LE 111011 frt:5 s:1 0000 frb:5 11010000101
 
 # format:X book:I page:219 v2.05 denbcdq DFP Encode BCD To DPD Quad
-DENBCDQ PPC64LE 111111 frtp:5 s:1 0000 frbp:5 11010000100
+DENBCDQ PPC64LE 111111 frtp:5 s:1 0000 frbp:5 11010000100 \
+!constraints { $frtp % 2 == 0 && $frbp % 2 == 0; }
 # format:X book:I page:219 v2.05 denbcdq. DFP Encode BCD To DPD Quad
-DENBCDQd PPC64LE 111111 frtp:5 s:1 0000 frbp:5 11010000101
+DENBCDQd PPC64LE 111111 frtp:5 s:1 0000 frbp:5 11010000101 \
+!constraints { $frtp % 2 == 0 && $frbp % 2 == 0; }
 
 # format:X book:I page:220 v2.05 diex DFP Insert Exponent
 DIEX PPC64LE 111011 frt:5 fra:5 frb:5 11011000100
@@ -357,9 +371,11 @@ DIEX PPC64LE 111011 frt:5 fra:5 frb:5 11011000100
 DIEXd PPC64LE 111011 frt:5 fra:5 frb:5 11011000101
 
 # format:X book:I page:220 v2.05 diexq DFP Insert Exponent Quad
-DIEXQ PPC64LE 111111 frtp:5 fra:5 frbp:5 11011000100
+DIEXQ PPC64LE 111111 frtp:5 fra:5 frbp:5 11011000100 \
+!constraints { $frtp % 2 == 0 && $frbp % 2 == 0; }
 # format:X book:I page:220 v2.05 diexq. DFP Insert Exponent Quad
-DIEXQd PPC64LE 111111 frtp:5 fra:5 frbp:5 11011000101
+DIEXQd PPC64LE 111111 frtp:5 fra:5 frbp:5 11011000101 \
+!constraints { $frtp % 2 == 0 && $frbp % 2 == 0; }
 
 # format:XO book:I page:82 PPC SR divd Divide Dword
 DIVD PPC64LE 011111 rt:5 ra:5 rb:5 01111010010 \
@@ -486,19 +502,25 @@ DQUAI PPC64LE 111011 frt:5 te:5 frb:5 rmc:2 010000110
 DQUAId PPC64LE 111011 frt:5 te:5 frb:5 rmc:2 010000111
 
 # format:Z23 book:I page:205 v2.05 dquaiq DFP Quantize Immediate Quad
-DQUAIQ PPC64LE 111111 frtp:5 te:5 frbp:5 rmc:2 010000110
+DQUAIQ PPC64LE 111111 frtp:5 te:5 frbp:5 rmc:2 010000110 \
+!constraints { $frtp % 2 == 0 && $frbp % 2 == 0; }
 # format:Z23 book:I page:205 v2.05 dquaiq. DFP Quantize Immediate Quad
-DQUAIQd PPC64LE 111111 frtp:5 te:5 frbp:5 rmc:2 010000111
+DQUAIQd PPC64LE 111111 frtp:5 te:5 frbp:5 rmc:2 010000111 \
+!constraints { $frtp % 2 == 0 && $frbp % 2 == 0; }
 
 # format:Z23 book:I page:206 v2.05 dquaq DFP Quantize Quad
-DQUAQ PPC64LE 111111 frtp:5 frap:5 frbp:5 rmc:2 000000110
+DQUAQ PPC64LE 111111 frtp:5 frap:5 frbp:5 rmc:2 000000110 \
+!constraints { $frtp % 2 == 0 && $frap % 2 == 0 && $frbp % 2 == 0; }
 # format:Z23 book:I page:206 v2.05 dquaq. DFP Quantize Quad
-DQUAQd PPC64LE 111111 frtp:5 frap:5 frbp:5 rmc:2 000000111
+DQUAQd PPC64LE 111111 frtp:5 frap:5 frbp:5 rmc:2 000000111 \
+!constraints { $frtp % 2 == 0 && $frap % 2 == 0 && $frbp % 2 == 0; }
 
 # format:X book:I page:216 v2.05 drdpq DFP Round To DFP Long
-DRDPQ PPC64LE 111111 frtp:5 00000 frbp:5 11000000100
+DRDPQ PPC64LE 111111 frtp:5 00000 frbp:5 11000000100 \
+!constraints { $frtp % 2 == 0 && $frbp % 2 == 0; }
 # format:X book:I page:216 v2.05 drdpq. DFP Round To DFP Long
-DRDPQd PPC64LE 111111 frtp:5 00000 frbp:5 11000000101
+DRDPQd PPC64LE 111111 frtp:5 00000 frbp:5 11000000101 \
+!constraints { $frtp % 2 == 0 && $frbp % 2 == 0; }
 
 # format:Z23 book:I page:213 v2.05 drintn DFP Round To FP Integer Without Inexact
 DRINTN PPC64LE 111011 frt:5 0000 r:1 frb:5 rmc:2 111000110
@@ -506,9 +528,11 @@ DRINTN PPC64LE 111011 frt:5 0000 r:1 frb:5 rmc:2 111000110
 DRINTNd PPC64LE 111011 frt:5 0000 r:1 frb:5 rmc:2 111000111
 
 # format:Z23 book:I page:213 v2.05 drintnq DFP Round To FP Integer Without Inexact Quad
-DRINTNQ PPC64LE 111111 frtp:5 0000 r:1 frbp:5 rmc:2 111000110
+DRINTNQ PPC64LE 111111 frtp:5 0000 r:1 frbp:5 rmc:2 111000110 \
+!constraints { $frtp % 2 == 0 && $frbp % 2 == 0; }
 # format:Z23 book:I page:213 v2.05 drintnq. DFP Round To FP Integer Without Inexact Quad
-DRINTNQd PPC64LE 111111 frtp:5 0000 r:1 frbp:5 rmc:2 111000111
+DRINTNQd PPC64LE 111111 frtp:5 0000 r:1 frbp:5 rmc:2 111000111 \
+!constraints { $frtp % 2 == 0 && $frbp % 2 == 0; }
 
 # format:Z23 book:I page:211 v2.05 drintx DFP Round To FP Integer With Inexact
 DRINTX PPC64LE 111011 frt:5 0000 r:1 frb:5 rmc:2 011000110
@@ -516,9 +540,11 @@ DRINTX PPC64LE 111011 frt:5 0000 r:1 frb:5 rmc:2 011000110
 DRINTXd PPC64LE 111011 frt:5 0000 r:1 frb:5 rmc:2 011000111
 
 # format:Z23 book:I page:211 v2.05 drintxq DFP Round To FP Integer With Inexact Quad
-DRINTXQ PPC64LE 111111 frtp:5 0000 r:1 frbp:5 rmc:2 011000110
+DRINTXQ PPC64LE 111111 frtp:5 0000 r:1 frbp:5 rmc:2 011000110 \
+!constraints { $frtp % 2 == 0 && $frbp % 2 == 0; }
 # format:Z23 book:I page:211 v2.05 drintxq. DFP Round To FP Integer With Inexact Quad
-DRINTXQd PPC64LE 111111 frtp:5 0000 r:1 frbp:5 rmc:2 011000111
+DRINTXQd PPC64LE 111111 frtp:5 0000 r:1 frbp:5 rmc:2 011000111 \
+!constraints { $frtp % 2 == 0 && $frbp % 2 == 0; }
 
 # format:Z23 book:I page:208 v2.05 drrnd DFP Reround
 DRRND PPC64LE 111011 frt:5 fra:5 frb:5 rmc:2 001000110
@@ -526,9 +552,11 @@ DRRND PPC64LE 111011 frt:5 fra:5 frb:5 rmc:2 001000110
 DRRNDd PPC64LE 111011 frt:5 fra:5 frb:5 rmc:2 001000111
 
 # format:Z23 book:I page:208 v2.05 drrndq DFP Reround Quad
-DRRNDQ PPC64LE 111111 frtp:5 fra:5 frbp:5 rmc:2 001000110
+DRRNDQ PPC64LE 111111 frtp:5 fra:5 frbp:5 rmc:2 001000110 \
+!constraints { $frtp % 2 == 0 && $frbp % 2 == 0; }
 # format:Z23 book:I page:208 v2.05 drrndq. DFP Reround Quad
-DRRNDQd PPC64LE 111111 frtp:5 fra:5 frbp:5 rmc:2 001000111
+DRRNDQd PPC64LE 111111 frtp:5 fra:5 frbp:5 rmc:2 001000111 \
+!constraints { $frtp % 2 == 0 && $frbp % 2 == 0; }
 
 # format:X book:I page:216 v2.05 drsp DFP Round To DFP Short
 DRSP PPC64LE 111011 frt:5 00000 frb:5 11000000100
@@ -541,9 +569,11 @@ DSCLI PPC64LE 111011 frt:5 fra:5 sh:6 0010000100
 DSCLId PPC64LE 111011 frt:5 fra:5 sh:6 0010000101
 
 # format:Z22 book:I page:222 v2.05 dscliq DFP Shift Significand Left Immediate Quad
-DSCLIQ PPC64LE 111111 frtp:5 frap:5 sh:6 0010000100
+DSCLIQ PPC64LE 111111 frtp:5 frap:5 sh:6 0010000100 \
+!constraints { $frtp % 2 == 0 && $frap % 2 == 0; }
 # format:Z22 book:I page:222 v2.05 dscliq. DFP Shift Significand Left Immediate Quad
-DSCLIQd PPC64LE 111111 frtp:5 frap:5 sh:6 0010000101
+DSCLIQd PPC64LE 111111 frtp:5 frap:5 sh:6 0010000101 \
+!constraints { $frtp % 2 == 0 && $frap % 2 == 0; }
 
 # format:Z22 book:I page:222 v2.05 dscri DFP Shift Significand Right Immediate
 DSCRI PPC64LE 111011 frt:5 fra:5 sh:6 0011000100
@@ -551,9 +581,11 @@ DSCRI PPC64LE 111011 frt:5 fra:5 sh:6 0011000100
 DSCRId PPC64LE 111011 frt:5 fra:5 sh:6 0011000101
 
 # format:Z22 book:I page:222 v2.05 dscriq DFP Shift Significand Right Immediate Quad
-DSCRIQ PPC64LE 111111 frtp:5 frap:5 sh:6 0011000100
+DSCRIQ PPC64LE 111111 frtp:5 frap:5 sh:6 0011000100 \
+!constraints { $frtp % 2 == 0 && $frap % 2 == 0; }
 # format:Z22 book:I page:222 v2.05 dscriq. DFP Shift Significand Right Immediate Quad
-DSCRIQd PPC64LE 111111 frtp:5 frap:5 sh:6 0011000101
+DSCRIQd PPC64LE 111111 frtp:5 frap:5 sh:6 0011000101 \
+!constraints { $frtp % 2 == 0 && $frap % 2 == 0; }
 
 # format:X book:I page:195 v2.05 dsub DFP Subtract
 DSUB PPC64LE 111011 frt:5 fra:5 frb:5 10000000100
@@ -561,27 +593,33 @@ DSUB PPC64LE 111011 frt:5 fra:5 frb:5 10000000100
 DSUBd PPC64LE 111011 frt:5 fra:5 frb:5 10000000101
 
 # format:X book:I page:195 v2.05 dsubq DFP Subtract Quad
-DSUBQ PPC64LE 111111 frtp:5 frap:5 frbp:5 10000000100
+DSUBQ PPC64LE 111111 frtp:5 frap:5 frbp:5 10000000100 \
+!constraints { $frtp % 2 == 0 && $frap % 2 == 0 && $frbp % 2 == 0; }
 # format:X book:I page:195 v2.05 dsubq. DFP Subtract Quad
-DSUBQd PPC64LE 111111 frtp:5 frap:5 frbp:5 10000000101
+DSUBQd PPC64LE 111111 frtp:5 frap:5 frbp:5 10000000101 \
+!constraints { $frtp % 2 == 0 && $frap % 2 == 0 && $frbp % 2 == 0; }
 
 # format:Z22 book:I page:202 v2.05 dtstdc DFP Test Data Class
 DTSTDC PPC64LE 111011 bf:3 00 fra:5 dcm:6 0110000100
 
 # format:Z22 book:I page:202 v2.05 dtstdcq DFP Test Data Class Quad
-DTSTDCQ PPC64LE 111111 bf:3 00 frap:5 dcm:6 0110000100
+DTSTDCQ PPC64LE 111111 bf:3 00 frap:5 dcm:6 0110000100 \
+!constraints { $frap % 2 == 0; }
 
 # format:Z22 book:I page:202 v2.05 dtstdg DFP Test Data Group
-DTSTDG PPC64LE 111011 bf:3 00 frap:5 dgm:6 0111000100
+DTSTDG PPC64LE 111011 bf:3 00 frap:5 dgm:6 0111000100 \
+!constraints { $frap % 2 == 0; }
 
 # format:Z22 book:I page:202 v2.05 dtstdgq DFP Test Data Group Quad
-DTSTDGQ PPC64LE 111111 bf:3 00 frap:5 dgm:6 0111000100
+DTSTDGQ PPC64LE 111111 bf:3 00 frap:5 dgm:6 0111000100 \
+!constraints { $frap % 2 == 0; }
 
 # format:X book:I page:203 v2.05 dtstex DFP Test Exponent
 DTSTEX PPC64LE 111011 bf:3 00 fra:5 frb:5 00101000100
 
 # format:X book:I page:203 v2.05 dtstexq DFP Test Exponent Quad
-DTSTEXQ PPC64LE 111111 bf:3 00 frap:5 frbp:5 00101000100
+DTSTEXQ PPC64LE 111111 bf:3 00 frap:5 frbp:5 00101000100 \
+!constraints { $frap % 2 == 0 && $frbp % 2 == 0; }
 
 # format:X book:I page:204 v2.05 dtstsf DFP Test Significance
 DTSTSF PPC64LE 111011 bf:3 0 fra:6 frb:5 10101000100
@@ -590,7 +628,8 @@ DTSTSF PPC64LE 111011 bf:3 0 fra:6 frb:5 10101000100
 DTSTSFI PPC64LE 111011 bf:3 0 uim:6 frb:5 10101000110
 
 # format:X book:I page:204 v3.0 dtstsfiq DFP Test Significance Immediate Quad
-DTSTSFIQ PPC64LE 111111 bf:3 0 uim:6 frbp:5 10101000110
+DTSTSFIQ PPC64LE 111111 bf:3 0 uim:6 frbp:5 10101000110 \
+!constraints { $frbp % 2 == 0; }
 
 # format:X book:I page:204 v2.05 dtstsfq DFP Test Significance Quad
 DTSTSFQ PPC64LE 111111 bf:3 0 fra:6 frb:5 10101000100
@@ -601,9 +640,11 @@ DXEX PPC64LE 111011 frt:5 00000 frb:5 01011000100
 DXEXd PPC64LE 111011 frt:5 00000 frb:5 01011000101
 
 # format:X book:I page:220 v2.05 dxexq DFP Extract Exponent Quad
-DEXEQ PPC64LE 111111 frt:5 00000 frbp:5 01011000100
+DXEXQ PPC64LE 111111 frt:5 00000 frbp:5 01011000100 \
+!constraints { $frbp % 2 == 0; }
 # format:X book:I page:220 v2.05 dxexq. DFP Extract Exponent Quad
-DEXEQd PPC64LE 111111 frt:5 00000 frbp:5 01011000101
+DXEXQd PPC64LE 111111 frt:5 00000 frbp:5 01011000101 \
+!constraints { $frbp % 2 == 0; }
 
 # format:X book:I page:94 v:P1 SR eqv Equivalent
 EQV PPC64LE 011111 rs:5 ra:5 rb:5 01000111000 \
