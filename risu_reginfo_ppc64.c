@@ -49,6 +49,7 @@ void reginfo_init(struct reginfo *ri, ucontext_t *uc)
     memset(ri, 0, sizeof(*ri));
 
     ri->faulting_insn = *((uint32_t *) uc->uc_mcontext.regs->nip);
+    ri->prev_insn = *((uint32_t *) (uc->uc_mcontext.regs->nip - 4));
     ri->nip = uc->uc_mcontext.regs->nip - image_start_address;
 
     for (i = 0; i < NGREG; i++) {
