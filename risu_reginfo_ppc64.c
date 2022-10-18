@@ -111,6 +111,15 @@ int reginfo_is_eq(struct reginfo *m, struct reginfo *a)
             return 0;
         }
     }
+
+    if (m->vrregs.vscr.vscr_word != a->vrregs.vscr.vscr_word) {
+        return 0;
+    }
+
+    if (m->vrregs.vrsave != a->vrregs.vrsave) {
+        return 0;
+    }
+
     return 1;
 }
 
@@ -154,6 +163,8 @@ int reginfo_dump(struct reginfo *ri, FILE * f)
                 ri->vrregs.vrregs[i][0], ri->vrregs.vrregs[i][1],
                 ri->vrregs.vrregs[i][2], ri->vrregs.vrregs[i][3]);
     }
+    fprintf(f, "\tvscr: %8x\tvrsave: %8x\n", ri->vrregs.vscr.vscr_word,
+            ri->vrregs.vrsave);
 
     return !ferror(f);
 }
@@ -215,5 +226,18 @@ int reginfo_dump_mismatch(struct reginfo *m, struct reginfo *a, FILE *f)
                     a->vrregs.vrregs[i][2], a->vrregs.vrregs[i][3]);
         }
     }
+
+    if (m->vrregs.vscr.vscr_word != a->vrregs.vscr.vscr_word) {
+        fprintf(f, "Mismatch: VSCR\n");
+        fprintf(f, "m: [%8x] != a: [%8x]\n", m->vrregs.vscr.vscr_word,
+                a->vrregs.vscr.vscr_word);
+    }
+
+    if (m->vrregs.vrsave != a->vrregs.vrsave) {
+        fprintf(f, "Mismatch: VRSAVE\n");
+        fprintf(f, "m: [%8x] != a: [%8x]\n", m->vrregs.vrsave,
+                a->vrregs.vrsave);
+    }
+
     return !ferror(f);
 }

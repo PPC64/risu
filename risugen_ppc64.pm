@@ -134,6 +134,14 @@ sub write_random_ppc64_fpdata()
 
 sub write_random_ppc64_vrdata()
 {
+    # Vector Status and Control Register
+    insn32(0x100004c4); # vxor vr0, vr0, vr0
+    insn32(0x10000644); # mtvscr vr0
+
+    # VR Save Register
+    write_mov_ri(0, rand(0xffffffff));
+    insn32(0x7c0043a6); # mtvrsave r0
+
     for (my $i = 0; $i < 32; $i++) {
         # load a random doubleword value at r0
         write_mov_ri128(rand(0xffffffff), rand(0xffffffff), rand(0xffffffff), rand(0xffffffff));
