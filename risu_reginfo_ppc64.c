@@ -21,6 +21,7 @@
 #include "risu.h"
 #include "risu_reginfo_ppc64.h"
 
+#define CTR 35
 #define XER 37
 #define CCR 38
 
@@ -78,6 +79,10 @@ int reginfo_is_eq(struct reginfo *m, struct reginfo *a)
         if (m->gregs[i] != a->gregs[i]) {
             return 0;
         }
+    }
+
+    if (m->gregs[CTR] != a->gregs[CTR]) {
+        return 0;
     }
 
     if (m->gregs[XER] != a->gregs[XER]) {
@@ -166,6 +171,11 @@ int reginfo_dump_mismatch(struct reginfo *m, struct reginfo *a, FILE *f)
             fprintf(f, "master: [%lx] - apprentice: [%lx]\n",
                     m->gregs[i], a->gregs[i]);
         }
+    }
+
+    if (m->gregs[CTR] != a->gregs[CTR]) {
+        fprintf(f, "Mismatch: CTR\n");
+        fprintf(f, "m: [%lx] != a: [%lx]\n", m->gregs[CTR], a->gregs[CTR]);
     }
 
     if (m->gregs[XER] != a->gregs[XER]) {

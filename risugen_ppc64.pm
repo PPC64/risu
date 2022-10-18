@@ -159,6 +159,10 @@ sub write_random_regdata()
         }
         write_mov_ri($i, rand(0xffffffff));
     }
+
+    # Count register
+    write_mov_ri(0, rand(0xffffffff));
+    insn32(0x7c0903a6); # mtctr r0
 }
 
 sub clear_vr_registers()
