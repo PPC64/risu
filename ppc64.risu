@@ -54,7 +54,7 @@ ADDEdo PPC64LE 011111 rt:5 ra:5 rb:5 10100010101 \
 !constraints { $rt != 1 && $ra != 1 && $rb != 1 && $rt != 13 && $ra != 13 && $rb != 13; }
 
 # format:XO book:I page:110 v:2.06 addg6s Add & Generate Sixes
-ADDG6S PPC64LE 111111 rt:5 ra:5 rb:5 00010010100 \
+ADDG6S PPC64LE 011111 rt:5 ra:5 rb:5 0 001001010 0 \
 !constraints { $rt != 1 && $ra != 1 && $rb != 1 && $rt != 13 && $ra != 13 && $rb != 13; }
 
 # format:D book:I page:68 v:P1 addi Add Immediate
