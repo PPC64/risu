@@ -1790,7 +1790,7 @@ STSWI PPC64BE 011111 rs:5 ra:5 rb:5 10110101010 \
 
 # format:DS book:I page:60 v2.03 stq Store Qword
 STQ PPC64BE 111110 rsp:5 ra:5 imm:14 10 \
-!constraints { $rsp % 2 == 0 && $ra != 1 && $ra != 13 && $ra != 0 && $rsp != $ra && $imm <= 8176; } \
+!constraints { $rsp % 2 == 0 && $rsp != 0 && $rsp != 12 && $ra != 1 && $ra != 13 && $ra != 0 && $rsp != ($ra & ~1) && $imm <= 8176; } \
 !memory { reg_plus_imm($ra, $imm << 2); }
 
 # format:X book:I page:66 v:P1 stswx Store String Word Indexed
