@@ -245,12 +245,11 @@ sub write_random_register_data($$)
 
 sub write_memblock_setup()
 {
-    # li r2, 0
-    write_mov_ri(2, 0);
-    for (my $i = 0; $i < 10000; $i = $i + 8) {
-        # std r2, 0(r1)
-        my $imm = -$i;
-        insn32((0x3e << 26) | (2 << 21) | (1 << 16) | ($imm & 0xffff));
+    for (my $i = 0; $i < 1024; $i = $i + 1) {
+        # li r2, $rand
+        write_mov_ri(2, rand(0xffffffff));
+        # stdu r2, -8(r1)
+        insn32((0x3e << 26) | (2 << 21) | (1 << 16) | (-8 & 0xffff) | 1);
     }
 }
 
