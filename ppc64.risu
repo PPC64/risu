@@ -1253,12 +1253,12 @@ LXVH8X PPC64LE 011111 t:5 ra:5 rb:5 1100101100 tx:1 \
 # format:XX1 book:I page:490 v3.0 lxvl Load VSX Vector with Length
 LXVL PPC64LE 011111 t:5 ra:5 rb:5 0100001101 tx:1 \
 !constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
-!memory { reg_plus_reg($ra, $rb); }
+!memory { write_mov_ri($rb, rand(0xff)); reg($ra); }
 
 # format:XX1 book:I page:492 v3.0 lxvll Load VSX Vector Left-justified with Length
 LXVLL PPC64LE 011111 t:5 ra:5 rb:5 0100101101 tx:1 \
 !constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
-!memory { reg_plus_reg($ra, $rb); }
+!memory { write_mov_ri($rb, rand(0xff)); reg($ra); }
 
 # format:XX1 book:I page:497 v2.06 lxvw4x Load VSX Vector Word*4 Indexed
 LXVW4X PPC64LE 011111 t:5 ra:5 rb:5 1100001100 tx:1 \
@@ -1906,12 +1906,12 @@ STXVH8X PPC64LE 011111 s:5 ra:5 rb:5 11101 01100 sx:1 \
 # format:XX1 book:I page:508 v3.0 stxvl Store VSX Vector with Length
 STXVL PPC64LE 011111 s:5 ra:5 rb:5 01100 01101 sx:1 \
 !constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
-!memory { reg_plus_reg($ra, $rb); }
+!memory { write_mov_ri($rb, rand(0xff)); reg($ra); }
 
 # format:XX1 book:I page:510 v3.0 stxvll Store VSX Vector Left-justified with Length
 STXVLL PPC64LE 011111 s:5 ra:5 rb:5 01101 01101 sx:1 \
 !constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
-!memory { reg_plus_reg($ra, $rb); }
+!memory { write_mov_ri($rb, rand(0xff)); reg($ra); }
 
 # format:XX1 book:I page:507 v2.06 stxvw4x Store VSX Vector Word*4 Indexed
 STXVW4X PPC64LE 011111 s:5 ra:5 rb:5 11100 01100 sx:1 \
