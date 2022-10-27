@@ -1226,9 +1226,9 @@ LXSSPX PPC64LE 011111 t:5 ra:5 rb:5 1000001100 tx:1 \
 !memory { reg_plus_reg($ra, $rb); }
 
 # format:DQ book:I page:493 v3.0 lxv Load VSX Vector
-LXV PPC64LE 111101 t:5 ra:5 imm:12 001 tx:1 \
+LXV PPC64LE 111101 t:5 ra:5 imm:12 tx:1 001 \
 !constraints { $ra != 1 && $ra != 13 && $ra != 0; } \
-!memory { reg_plus_imm($ra, $imm); }
+!memory { reg_plus_imm($ra, $imm << 4); }
 
 # format:XX1 book:I page:488 v3.0 lxvb16x Load VSX Vector Byte*16 Indexed
 LXVB16X PPC64LE 011111 t:5 ra:5 rb:5 1101101100 tx:1 \
