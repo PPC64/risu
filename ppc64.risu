@@ -1534,6 +1534,122 @@ ORIS PPC64LE 011001 rs:5 ra:5 imm:16 \
 PADDI PPC64LE 000001 10 000 r:1 00 si0:18 001110 rt:5 ra:5 si1:16 \
 !constraints { $rt != 1 && $ra != 1 && $rt != 13 && $ra != 13; }
 
+# format:XX3 book:I page:827 v3.01 xvbf16ger2   Prefixed Masked VSX Vector bfloat16 GER (rank-2 update)
+PMXVBF16GER2 PPC64LE     000001 11 1001 00 0 0 pmsk:2 000000 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:5 b:5 00110011 ax:1 bx:1 0
+
+# format:XX3 book:I page:827 v3.01 xvbf16ger2nn Prefixed Masked VSX Vector bfloat16 GER (rank-2 update) Negative multiply, Negative accumulate
+PMXVBF16GER2NN PPC64LE   000001 11 1001 00 0 0 pmsk:2 000000 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:5 b:5 11110010 ax:1 bx:1 0
+
+# format:XX3 book:I page:827 v3.01 xvbf16ger2np Prefixed Masked VSX Vector bfloat16 GER (rank-2 update) Negative multiply, Positive accumulate
+PMXVBF16GER2NP PPC64LE   000001 11 1001 00 0 0 pmsk:2 000000 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:5 b:5 01110010 ax:1 bx:1 0
+
+# format:XX3 book:I page:827 v3.01 xvbf16ger2pn Prefixed Masked VSX Vector bfloat16 GER (rank-2 update) Positive multiply, Negative accumulate
+PMXVBF16GER2PN PPC64LE   000001 11 1001 00 0 0 pmsk:2 000000 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:5 b:5 10110010 ax:1 bx:1 0
+
+# format:XX3 book:I page:827 v3.01 xvbf16ger2pp Prefixed Masked VSX Vector bfloat16 GER (rank-2 update) Positive multiply, Positive accumulate
+PMXVBF16GER2PP PPC64LE   000001 11 1001 00 0 0 pmsk:2 000000 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:5 b:5 00110010 ax:1 bx:1 0
+
+# format:XX3 book:I page:891 v3.01 xvi16ger2 Prefixed Masked VSX Vector 16-bit Signed Integer GER (rank-2 update)
+PMXVI16GER2 PPC64LE      000001 11 1001 00 0 0 pmsk:2 000000 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:5 b:5 01001011 ax:1 bx:1 0
+
+# format:XX3 book:I page:891 v3.01 xvi16ger2 Prefixed Masked VSX Vector 16-bit Signed Integer GER (rank-2 update)
+PMXVI16GER2PP PPC64LE    000001 11 1001 00 0 0 pmsk:2 000000 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:5 b:5 01101011 ax:1 bx:1 0
+
+# format:XX3 book:I page:891 v3.01 xvi16ger2s Prefixed Masked VSX Vector 16-bit Signed Integer GER (rank-2 update) with Saturation Positive multiply, Positive accumulate
+PMXVI16GER2S PPC64LE     000001 11 1001 00 0 0 pmsk:2 000000 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:5 b:5 00101011 ax:1 bx:1 0
+
+# format:XX3 book:I page:891 v3.01 xvi16ger2 Prefixed Masked VSX Vector 16-bit Signed Integer GER (rank-2 update) with Saturation Positive multiply, Positive accumulate
+PMXVI16GER2SPP PPC64LE   000001 11 1001 00 0 0 pmsk:2 000000 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:5 b:5 00101010 ax:1 bx:1 0
+
+# format:XX3 book:I page:883 v3.01 xvi4ger8 Prefixed Masked VSX Vector 4-bit Signed Integer GER (rank-8 update)
+PMXVI4GER8 PPC64LE       000001 11 1001 00 0 0 pmsk:8 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:5 b:5 00100011 ax:1 bx:1 0
+
+# format:XX3 book:I page:883 v3.01 xvi4ger8pp Prefixed Masked VSX Vector 4-bit Signed Integer GER (rank-8 update) Positive multiply, Positive accumulate
+PMXVI4GER8PP PPC64LE     000001 11 1001 00 0 0 pmsk:8 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:5 b:5 00100010 ax:1 bx:1 0
+
+# format:XX3 book:I page:886 v3.01 xvi8ger4 Prefixed Masked VSX Vector 8-bit Signed/Unsigned Integer GER (rank-4 update)
+PMXVI8GER4 PPC64LE       000001 11 1001 00 0 0 pmsk:4 0000 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:5 b:5 00000011 ax:1 bx:1 0
+
+# format:XX3 book:I page:886 v3.01 xvi8ger4pp Prefixed Masked VSX Vector 8-bit Signed/Unsigned Integer GER (rank-4 update) Positive multiply, Positive accumulate
+PMXVI8GER4PP PPC64LE     000001 11 1001 00 0 0 pmsk:4 0000 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:5 b:5 00000010 ax:1 bx:1 0
+
+# format:XX3 book:I page:889 v3.01 xvi8ger4spp Prefixed Masked VSX Vector 8-bit Signed/Unsigned Integer GER (rank-4 update) with Saturate Positive multiply, Positive accumulate
+PMXVI8GER4SPP PPC64LE    000001 11 1001 00 0 0 pmsk:4 0000 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:5 b:5 01100011 ax:1 bx:1 0
+
+# format:XX3 book:I page:871 v3.01 xvf16ger2   Prefixed Masked VSX Vector 16-bit Floating-Point GER (rank-2 update)
+PMXVF16GER2 PPC64LE      000001 11 1001 00 0 0 pmsk:2 000000 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:5 b:5 00010011 ax:1 bx:1 0
+
+# format:XX3 book:I page:871 v3.01 xvf16ger2nn Prefixed Masked VSX Vector 16-bit Floating-Point GER (rank-2 update) Negative multiply, Negative accumulate
+PMXVF16GER2NN PPC64LE    000001 11 1001 00 0 0 pmsk:2 000000 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:5 b:5 11010010 ax:1 bx:1 0
+
+# format:XX3 book:I page:871 v3.01 xvf16ger2np Prefixed Masked VSX Vector 16-bit Floating-Point GER (rank-2 update) Negative multiply, Positive accumulate
+PMXVF16GER2NP PPC64LE    000001 11 1001 00 0 0 pmsk:2 000000 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:5 b:5 01010010 ax:1 bx:1 0
+
+# format:XX3 book:I page:871 v3.01 xvf16ger2pn Prefixed Masked VSX Vector 16-bit Floating-Point GER (rank-2 update) Positive multiply, Negative accumulate
+PMXVF16GER2PN PPC64LE    000001 11 1001 00 0 0 pmsk:2 000000 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:5 b:5 10010010 ax:1 bx:1 0
+
+# format:XX3 book:I page:871 v3.01 xvf16ger2pp Prefixed Masked VSX Vector 16-bit Floating-Point GER (rank-2 update) Positive multiply, Positive accumulate
+PMXVF16GER2PP PPC64LE    000001 11 1001 00 0 0 pmsk:2 000000 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:5 b:5 00010010 ax:1 bx:1 0
+
+# format:XX3 book:I page:875 v3.01 xvf32ger   Prefixed Masked VSX Vector 32-bit Floating-Point GER (rank-1 update)
+PMXVF32GER PPC64LE       000001 11 1001 00 0 0 00000000 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:5 b:5 00011011 ax:1 bx:1 0
+
+# format:XX3 book:I page:875 v3.01 xvf32gernn Prefixed Masked VSX Vector 32-bit Floating-Point GER (rank-1 update) Negative multiply, Negative accumulate
+PMXVF32GERNN PPC64LE     000001 11 1001 00 0 0 00000000 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:5 b:5 11011010 ax:1 bx:1 0
+
+# format:XX3 book:I page:875 v3.01 xvf32gernp Prefixed Masked VSX Vector 32-bit Floating-Point GER (rank-1 update) Negative multiply, Positive accumulate
+PMXVF32GERNP PPC64LE     000001 11 1001 00 0 0 00000000 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:5 b:5 01011010 ax:1 bx:1 0
+
+# format:XX3 book:I page:875 v3.01 xvf32gerpn Prefixed Masked VSX Vector 32-bit Floating-Point GER (rank-1 update) Positive multiply, Negative accumulate
+PMXVF32GERPN PPC64LE     000001 11 1001 00 0 0 00000000 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:5 b:5 10011010 ax:1 bx:1 0
+
+# format:XX3 book:I page:875 v3.01 xvf32gerpp Prefixed Masked VSX Vector 32-bit Floating-Point GER (rank-1 update) Positive multiply, Positive accumulate
+PMXVF32GERPP PPC64LE     000001 11 1001 00 0 0 00000000 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:5 b:5 00011010 ax:1 bx:1 0
+
+# format:XX3 book:I page:879 v3.01 xvf64ger   Prefixed Masked VSX Vector 64-bit Floating-Point GER (rank-1 update)
+PMXVF64GER PPC64LE       000001 11 1001 00 0 0 00000000 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:4 0 b:5 00111011 ax:1 bx:1 0
+
+# format:XX3 book:I page:879 v3.01 xvf64gernn Prefixed Masked VSX Vector 64-bit Floating-Point GER (rank-1 update) Negative multiply, Negative accumulate
+PMXVF64GERNN PPC64LE     000001 11 1001 00 0 0 00000000 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:4 0 b:5 11111010 ax:1 bx:1 0
+
+# format:XX3 book:I page:879 v3.01 xvf64gernp Prefixed Masked VSX Vector 64-bit Floating-Point GER (rank-1 update) Negative multiply, Positive accumulate
+PMXVF64GERNP PPC64LE     000001 11 1001 00 0 0 00000000 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:4 0 b:5 01111010 ax:1 bx:1 0
+
+# format:XX3 book:I page:879 v3.01 xvf64gerpn Prefixed Masked VSX Vector 64-bit Floating-Point GER (rank-1 update) Positive multiply, Negative accumulate
+PMXVF64GERPN PPC64LE     000001 11 1001 00 0 0 00000000 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:4 0 b:5 10111010 ax:1 bx:1 0
+
+# format:XX3 book:I page:879 v3.01 xvf64gerpp Prefixed Masked VSX Vector 64-bit Floating-Point GER (rank-1 update) Positive multiply, Positive accumulate
+PMXVF64GERPP PPC64LE     000001 11 1001 00 0 0 00000000 xmks:4 ymsk:4              \
+                         111011 at:3 00 a:4 0 b:5 00111010 ax:1 bx:1 0
+
 # format:X book:I page:96 v2.02 popcntb Population Count Byte
 POPCNTB PPC64LE 011111 rs:5 ra:5 0000000011110100 \
 !constraints { $rs != 1 && $ra != 1 && $rs != 13 && $ra != 13; }
