@@ -917,10 +917,11 @@ LDBRX PPC64LE 011111 rt:5 ra:5 rb:5 10000101000 \
 !constraints { $rt != 1 && $ra != 1 && $rb != 1 && $rt != 13 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rt && $ra != $rb && $rt != $rb; } \
 !memory { reg_plus_reg($ra, $rb); }
 
+# LDMX was removed in PowerISA v3.0b
 # format:X book:I page:54 v3.0 PI ldmx Load Dword Monitored Indexed
-LDMX PPC64LE 011111 rt:5 ra:5 rb:5 01001101010 \
-!constraints { $rt != 1 && $ra != 1 && $rb != 1 && $rt != 13 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rt && $ra != $rb && $rt != $rb; } \
-!memory { reg_plus_reg($ra, $rb); }
+#LDMX PPC64LE 011111 rt:5 ra:5 rb:5 01001101010 \
+#!constraints { $rt != 1 && $ra != 1 && $rb != 1 && $rt != 13 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rt && $ra != $rb && $rt != $rb; } \
+#!memory { reg_plus_reg($ra, $rb); }
 
 # format:DS book:I page:53 PPC ldu Load Dword with Update
 LDU PPC64LE 111010 rt:5 ra:5 imm:14 01 \
@@ -3156,10 +3157,11 @@ XVCMPGTSP PPC64LE 111100 t:5 a:5 b:5 01001011 ax:1 bx:1 tx:1
 # format:XX3 book:I page:672 v2.06 xvcmpgtsp[.] VSX Vector Compare Greater Than SP
 XVCMPGTSPd PPC64LE 111100 t:5 a:5 b:5 11001011 ax:1 bx:1 tx:1
 
+# XVCMPNEDP[.] was removed in Power ISA v3.0b
 # format:XX3 book:I page:673 v3.0 xvcmpnedp[.] VSX Vector Compare Not Equal Double-Precision
-XVCMPNEDP PPC64LE 111100 t:5 a:5 b:5 01111011 ax:1 bx:1 tx:1
+#XVCMPNEDP PPC64LE 111100 t:5 a:5 b:5 01111011 ax:1 bx:1 tx:1
 # format:XX3 book:I page:673 v3.0 xvcmpnedp[.] VSX Vector Compare Not Equal Double-Precision
-XVCMPNEDPd PPC64LE 111100 t:5 a:5 b:5 11111011 ax:1 bx:1 tx:1
+#XVCMPNEDPd PPC64LE 111100 t:5 a:5 b:5 11111011 ax:1 bx:1 tx:1
 
 # format:XX3 book:I page:674 v3.0 xvcmpnesp[.] VSX Vector Compare Not Equal Single-Precision
 XVCMPNESP PPC64LE 111100 t:5 a:5 b:5 01011011 ax:1 bx:1 tx:1
