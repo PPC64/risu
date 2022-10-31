@@ -1530,6 +1530,10 @@ ORI PPC64LE 011000 rs:5 ra:5 imm:16 \
 ORIS PPC64LE 011001 rs:5 ra:5 imm:16 \
 !constraints { $rs != 1 && $ra != 1 && $rs != 13 && $ra != 13; }
 
+# format:MLS-D book:I page:78 v3.1 paddi Prefixed Add Immediate
+PADDI PPC64LE 000001 10 000 r:1 00 si0:18 001110 rt:5 ra:5 si1:16 \
+!constraints { $rt != 1 && $ra != 1 && $rt != 13 && $ra != 13; }
+
 # format:X book:I page:96 v2.02 popcntb Population Count Byte
 POPCNTB PPC64LE 011111 rs:5 ra:5 0000000011110100 \
 !constraints { $rs != 1 && $ra != 1 && $rs != 13 && $ra != 13; }
@@ -3823,6 +3827,10 @@ XXBRQ PPC64LE 111100 t:5 11111 b:5 111011011 bx:1 tx:1
 # format:XX2 book:I page:769 v3.0 xxbrw VSX Vector Byte-Reverse Word
 XXBRW PPC64LE 111100 t:5 01111 b:5 111011011 bx:1 tx:1
 
+# format:8RR-XX4 book:I page:976 v3.1 xxeval VSX Vector Evaluate
+XXEVAL PPC64LE 000001 01 0000 00 0000000000 imm:8       \
+       100010 t:5 a:5 b:5 c:5 01 cx:1 ax:1 bx:1 tx:1
+
 # format:XX2 book:I page:770 v3.0 xxextractuw VSX Vector Extract Unsigned Word
 XXEXTRACTUW PPC64LE 111100 t:5 0 uim:4 b:5 010100101 bx:1 tx:1
 
@@ -3885,6 +3893,10 @@ XXPERMDI PPC64LE 111100 t:5 a:5 b:5 0 dm:2 01010 ax:1 bx:1 tx:1
 
 # format:XX3 book:I page:776 v3.0 xxpermr VSX Vector Permute Right-indexed
 XXPERMR PPC64LE 111100 t:5 a:5 b:5 00111010 ax:1 bx:1 tx:1
+
+# format:8RR-XX4 book:I page:997 xxpermx VSX Vector Permute Extended
+XXPERMX PPC64LE 000001 01 0000 00 000000000000000 uim:3 \
+                100010 t:5 a:5 b:5 c:5 00 cx:1 ax:1 bx:1 tx:1
 
 # format:XX4 book:I page:777 v2.06 xxsel VSX Vector Select
 XXSEL PPC64LE 111100 t:5 a:5 b:5 c:5 11 cx:1 ax:1 bx:1 tx:1
