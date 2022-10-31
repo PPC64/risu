@@ -2350,6 +2350,42 @@ VCTZLSBB PPC64LE 000100 rt:5 00001 vrb:5 11000000010 \
 # format:VX book:I page:344 v3.0 vctzw Vector Count Trailing Zeros Word
 VCTZW PPC64LE 000100 vrt:5 11110 vrb:5 11000000010
 
+# format:VX  book:I page 361 v3.1 vdivesd Vector Divide Extended Signed Doubleword
+VDIVESD PPC64LE 000100 vrt:5 vra:5 vrb:5 01111001011
+
+# format:VX  book:I page 363 v3.1 vdivesq Vector Divide Extended Signed Quadword
+VDIVESQ PPC64LE 000100 vrt:5 vra:5 vrb:5 01100001011
+
+# format:VX  book:I page 359 v3.1 vdivesw Vector Divide Extended Signed Word
+VDIVESW PPC64LE 000100 vrt:5 vra:5 vrb:5 01110001011
+
+# format:VX  book:I page 361 v3.1 vdiveud Vector Divide Extended Unsigned Doubleword
+VDIVEUD PPC64LE 000100 vrt:5 vra:5 vrb:5 01011001011
+
+# format:VX  book:I page 363 v3.1 vdiveuq Vector Divide Extended Unsigned Quadword
+VDIVEUQ PPC64LE 000100 vrt:5 vra:5 vrb:5 01000001011
+
+# format:VX  book:I page 359 v3.1 vdiveuw Vector Divide Extended Unsigned Word
+VDIVEUW PPC64LE 000100 vrt:5 vra:5 vrb:5 01010001011
+
+# format:VX  book:I page 360 v3.1 vdivsd Vector Divide Signed Doubleword
+VDIVSD PPC64LE 000100 vrt:5 vra:5 vrb:5 00111001011
+
+# format:VX  book:I page 362 v3.1 vdivsq Vector Divide Signed Quadword
+VDIVSQ PPC64LE 000100 vrt:5 vra:5 vrb:5 00100001011
+
+# format:VX  book:I page 358 v3.1 vdivsw Vector Divide Signed Word
+VDIVSW PPC64LE 000100 vrt:5 vra:5 vrb:5 00110001011
+
+# format:VX  book:I page 360 v3.1 vdivud Vector Divide Unsigned Doubleword
+VDIVUD PPC64LE 000100 vrt:5 vra:5 vrb:5 00011001011
+
+# format:VX  book:I page 362 v3.1 vdivuq Vector Divide Unsigned Quadword
+VDIVUQ PPC64LE 000100 vrt:5 vra:5 vrb:5 00000001011
+
+# format:VX  book:I page 358 v3.1 vdivuw Vector Divide Unsigned Word
+VDIVUW PPC64LE 000100 vrt:5 vra:5 vrb:5 00010001011
+
 # format:VX book:I page:315 v2.07 veqv Vector Logical Equivalence
 VEQV PPC64LE 000100 vrt:5 vra:5 vrb:5 11010000100
 
@@ -2492,6 +2528,24 @@ VMINUH PPC64LE 000100 vrt:5 vra:5 vrb:5 01001000010
 # format:VX book:I page:305 v2.03 vminuw Vector Minimum Unsigned Word
 VMINUW PPC64LE 000100 vrt:5 vra:5 vrb:5 01010000010
 
+# format:VX  book:I page 365 v3.1 vmodsd Vector Modulo Signed Doubleword
+VMODSD PPC64LE 000100 vrt:5 vra:5 vrb:5 11111001011
+
+# format:VX  book:I page 366 v3.1 vmodsq Vector Modulo Signed Quadword
+VMODSQ PPC64LE 000100 vrt:5 vra:5 vrb:5 11100001011
+
+# format:VX  book:I page 364 v3.1 vmodsw Vector Modulo Signed Word
+VMODSW PPC64LE 000100 vrt:5 vra:5 vrb:5 11110001011
+
+# format:VX  book:I page 365 v3.1 vmodud Vector Modulo Unsigned Doubleword
+VMODUD PPC64LE 000100 vrt:5 vra:5 vrb:5 11011001011
+
+# format:VX  book:I page 366 v3.1 vmoduq Vector Modulo Unsigned Quadword
+VMODUQ PPC64LE 000100 vrt:5 vra:5 vrb:5 11000001011
+
+# format:VX  book:I page 364 v3.1 vmoduw Vector Modulo Unsigned Word
+VMODUW PPC64LE 000100 vrt:5 vra:5 vrb:5 11010001011
+
 # format:VX book:I page:259 v2.07 vmrgew Vector Merge Even Word
 VMRGEW PPC64LE 000100 vrt:5 vra:5 vrb:5 11110001100
 
@@ -2558,6 +2612,9 @@ VMUL10UQ PPC64LE 000100 vrt:5 vra:5 0000001000000001
 # format:VX book:I page:283 v2.03 vmulesb Vector Multiply Even Signed Byte
 VMULESB PPC64LE 000100 vrt:5 vra:5 vrb:5 01100001000
 
+# format:VX  book:I page 345 v3.1 vmulesd Vector Multiply Even Signed Doubleword
+VMULESD PPC64LE 000100 vrt:5 vra:5 vrb:5 01111001000
+
 # format:VX book:I page:284 v2.03 vmulesh Vector Multiply Even Signed Hword
 VMULESH PPC64LE 000100 vrt:5 vra:5 vrb:5 01101001000
 
@@ -2567,14 +2624,35 @@ VMULESW PPC64LE 000100 vrt:5 vra:5 vrb:5 01110001000
 # format:VX book:I page:283 v2.03 vmuleub Vector Multiply Even Unsigned Byte
 VMULEUB PPC64LE 000100 vrt:5 vra:5 vrb:5 01000001000
 
+# format:VX  book:I page 346 v3.1 vmuleud Vector Multiply Even Unsigned Doubleword
+VMULEUD PPC64LE 000100 vrt:5 vra:5 vrb:5 01011001000
+
 # format:VX book:I page:284 v2.03 vmuleuh Vector Multiply Even Unsigned Hword
 VMULEUH PPC64LE 000100 vrt:5 vra:5 vrb:5 01001001000
 
 # format:VX book:I page:285 v2.07 vmuleuw Vector Multiply Even Unsigned Word
 VMULEUW PPC64LE 000100 vrt:5 vra:5 vrb:5 01010001000
 
+# format:VX  book:I page 349 v3.1 vmulhsd Vector Multiply High Signed Doubleword
+VMULHSD PPC64LE 000100 vrt:5 vra:5 vrb:5 01111001001
+
+# format:VX  book:I page 347 v3.1 vmulhsw Vector Multiply High Signed Word
+VMULHSW PPC64LE 000100 vrt:5 vra:5 vrb:5 01110001001
+
+# format:VX  book:I page 349 v3.1 vmulhud Vector Multiply High Unsigned Doubleword
+VMULHUD PPC64LE 000100 vrt:5 vra:5 vrb:5 01011001001
+
+# format:VX  book:I page 348 v3.1 vmulhuw Vector Multiply High Unsigned Word
+VMULHUW PPC64LE 000100 vrt:5 vra:5 vrb:5 01010001001
+
+# format:VX  book:I page 350 v3.1 vmulld Vector Multiply Low Doubleword
+VMULLD  PPC64LE 000100 vrt:5 vra:5 vrb:5 00111001001
+
 # format:VX book:I page:283 v2.03 vmulosb Vector Multiply Odd Signed Byte
 VMULOSB PPC64LE 000100 vrt:5 vra:5 vrb:5 00100001000
+
+# format:VX  book:I page 345 v3.1 vmulosd Vector Multiply Odd Signed Doubleword
+VMULOSD PPC64LE 000100 vrt:5 vra:5 vrb:5 00111001000
 
 # format:VX book:I page:284 v2.03 vmulosh Vector Multiply Odd Signed Hword
 VMULOSH PPC64LE 000100 vrt:5 vra:5 vrb:5 00101001000
@@ -2584,6 +2662,9 @@ VMULOSW PPC64LE 000100 vrt:5 vra:5 vrb:5 00110001000
 
 # format:VX book:I page:283 v2.03 vmuloub Vector Multiply Odd Unsigned Byte
 VMULOUB PPC64LE 000100 vrt:5 vra:5 vrb:5 00000001000
+
+# format:VX  book:I page 346 v3.1 vmuloud Vector Multiply Odd Unsigned Doubleword
+VMULOUD PPC64LE 000100 vrt:5 vra:5 vrb:5 00011001000
 
 # format:VX book:I page:284 v2.03 vmulouh Vector Multiply Odd Unsigned Hword
 VMULOUH PPC64LE 000100 vrt:5 vra:5 vrb:5 00001001000
@@ -3359,6 +3440,21 @@ XVADDDP PPC64LE 111100 t:5 a:5 b:5 01100000 ax:1 bx:1 tx:1
 # format:XX3 book:I page:665 v2.06 xvaddsp VSX Vector Add SP
 XVADDSP PPC64LE 111100 t:5 a:5 b:5 01000000 ax:1 bx:1 tx:1
 
+# format:XX3 book:I page:827 v3.01 xvbf16ger2   VSX Vector bfloat16 GER (rank-2 update)
+XVBF16GER2 PPC64LE     111011 at:3 00 a:5 b:5 00110011 ax:1 bx:1 0
+
+# format:XX3 book:I page:827 v3.01 xvbf16ger2nn VSX Vector bfloat16 GER (rank-2 update) Negative multiply, Negative accumulate
+XVBF16GER2NN PPC64LE   111011 at:3 00 a:5 b:5 11110010 ax:1 bx:1 0
+
+# format:XX3 book:I page:827 v3.01 xvbf16ger2np VSX Vector bfloat16 GER (rank-2 update) Negative multiply, Positive accumulate
+XVBF16GER2NP PPC64LE   111011 at:3 00 a:5 b:5 01110010 ax:1 bx:1 0
+
+# format:XX3 book:I page:827 v3.01 xvbf16ger2pn VSX Vector bfloat16 GER (rank-2 update) Positive multiply, Negative accumulate
+XVBF16GER2PN PPC64LE   111011 at:3 00 a:5 b:5 10110010 ax:1 bx:1 0
+
+# format:XX3 book:I page:827 v3.01 xvbf16ger2pp VSX Vector bfloat16 GER (rank-2 update) Positive multiply, Positive accumulate
+XVBF16GER2PP PPC64LE   111011 at:3 00 a:5 b:5 00110010 ax:1 bx:1 0
+
 # format:XX3 book:I page:667 v2.06 xvcmpeqdp[.] VSX Vector Compare Equal DP
 XVCMPEQDP PPC64LE 111100 t:5 a:5 b:5 01100011 ax:1 bx:1 tx:1
 # format:XX3 book:I page:667 v2.06 xvcmpeqdp[.] VSX Vector Compare Equal DP
@@ -3471,6 +3567,78 @@ XVDIVDP PPC64LE 111100 t:5 a:5 b:5 01111000 ax:1 bx:1 tx:1
 
 # format:XX3 book:I page:702 v2.06 xvdivsp VSX Vector Divide SP
 XVDIVSP PPC64LE 111100 t:5 a:5 b:5 01011000 ax:1 bx:1 tx:1
+
+# format:XX3 book:I page:871 v3.01 xvf16ger2   VSX Vector 16-bit Floating-Point GER (rank-2 update)
+XVF16GER2 PPC64LE      111011 at:3 00 a:5 b:5 00010011 ax:1 bx:1 0
+
+# format:XX3 book:I page:871 v3.01 xvf16ger2nn VSX Vector 16-bit Floating-Point GER (rank-2 update) Negative multiply, Negative accumulate
+XVF16GER2NN PPC64LE    111011 at:3 00 a:5 b:5 11010010 ax:1 bx:1 0
+
+# format:XX3 book:I page:871 v3.01 xvf16ger2np VSX Vector 16-bit Floating-Point GER (rank-2 update) Negative multiply, Positive accumulate
+XVF16GER2NP PPC64LE    111011 at:3 00 a:5 b:5 01010010 ax:1 bx:1 0
+
+# format:XX3 book:I page:871 v3.01 xvf16ger2pn VSX Vector 16-bit Floating-Point GER (rank-2 update) Positive multiply, Negative accumulate
+XVF16GER2PN PPC64LE    111011 at:3 00 a:5 b:5 10010010 ax:1 bx:1 0
+
+# format:XX3 book:I page:871 v3.01 xvf16ger2pp VSX Vector 16-bit Floating-Point GER (rank-2 update) Positive multiply, Positive accumulate
+XVF16GER2PP PPC64LE    111011 at:3 00 a:5 b:5 00010010 ax:1 bx:1 0
+
+# format:XX3 book:I page:875 v3.01 xvf32ger   VSX Vector 32-bit Floating-Point GER (rank-1 update)
+XVF32GER PPC64LE       111011 at:3 00 a:5 b:5 00011011 ax:1 bx:1 0
+
+# format:XX3 book:I page:875 v3.01 xvf32gernn VSX Vector 32-bit Floating-Point GER (rank-1 update) Negative multiply, Negative accumulate
+XVF32GERNN PPC64LE     111011 at:3 00 a:5 b:5 11011010 ax:1 bx:1 0
+
+# format:XX3 book:I page:875 v3.01 xvf32gernp VSX Vector 32-bit Floating-Point GER (rank-1 update) Negative multiply, Positive accumulate
+XVF32GERNP PPC64LE     111011 at:3 00 a:5 b:5 01011010 ax:1 bx:1 0
+
+# format:XX3 book:I page:875 v3.01 xvf32gerpn VSX Vector 32-bit Floating-Point GER (rank-1 update) Positive multiply, Negative accumulate
+XVF32GERPN PPC64LE     111011 at:3 00 a:5 b:5 10011010 ax:1 bx:1 0
+
+# format:XX3 book:I page:875 v3.01 xvf32gerpp VSX Vector 32-bit Floating-Point GER (rank-1 update) Positive multiply, Positive accumulate
+XVF32GERPP PPC64LE     111011 at:3 00 a:5 b:5 00011010 ax:1 bx:1 0
+
+# format:XX3 book:I page:879 v3.01 xvf64ger   VSX Vector 64-bit Floating-Point GER (rank-1 update)
+XVF64GER PPC64LE       111011 at:3 00 a:4 0 b:5 00111011 ax:1 bx:1 0
+
+# format:XX3 book:I page:879 v3.01 xvf64gernn VSX Vector 64-bit Floating-Point GER (rank-1 update) Negative multiply, Negative accumulate
+XVF64GERNN PPC64LE     111011 at:3 00 a:4 0 b:5 11111010 ax:1 bx:1 0
+
+# format:XX3 book:I page:879 v3.01 xvf64gernp VSX Vector 64-bit Floating-Point GER (rank-1 update) Negative multiply, Positive accumulate
+XVF64GERNP PPC64LE     111011 at:3 00 a:4 0 b:5 01111010 ax:1 bx:1 0
+
+# format:XX3 book:I page:879 v3.01 xvf64gerpn VSX Vector 64-bit Floating-Point GER (rank-1 update) Positive multiply, Negative accumulate
+XVF64GERPN PPC64LE     111011 at:3 00 a:4 0 b:5 10111010 ax:1 bx:1 0
+
+# format:XX3 book:I page:879 v3.01 xvf64gerpp VSX Vector 64-bit Floating-Point GER (rank-1 update) Positive multiply, Positive accumulate
+XVF64GERPP PPC64LE     111011 at:3 00 a:4 0 b:5 00111010 ax:1 bx:1 0
+
+# format:XX3 book:I page:891 v3.01 xvi16ger2 VSX Vector 16-bit Signed Integer GER (rank-2 update)
+XVI16GER2 PPC64LE      111011 at:3 00 a:5 b:5 01001011 ax:1 bx:1 0
+
+# format:XX3 book:I page:891 v3.01 xvi16ger2 VSX Vector 16-bit Signed Integer GER (rank-2 update)
+XVI16GER2PP PPC64LE    111011 at:3 00 a:5 b:5 01101011 ax:1 bx:1 0
+
+# format:XX3 book:I page:891 v3.01 xvi16ger2s VSX Vector 16-bit Signed Integer GER (rank-2 update) with Saturation Positive multiply, Positive accumulate
+XVI16GER2S PPC64LE     111011 at:3 00 a:5 b:5 00101011 ax:1 bx:1 0
+
+# format:XX3 book:I page:891 v3.01 xvi16ger2 VSX Vector 16-bit Signed Integer GER (rank-2 update) with Saturation Positive multiply, Positive accumulate
+XVI16GER2SPP PPC64LE   111011 at:3 00 a:5 b:5 00101010 ax:1 bx:1 0
+
+# format:XX3 book:I page:883 v3.01 xvi4ger8 VSX Vector 4-bit Signed Integer GER (rank-8 update)
+XVI4GER8 PPC64LE       111011 at:3 00 a:5 b:5 00100011 ax:1 bx:1 0
+
+# format:XX3 book:I page:883 v3.01 xvi4ger8pp VSX Vector 4-bit Signed Integer GER (rank-8 update) Positive multiply, Positive accumulate
+XVI4GER8PP PPC64LE     111011 at:3 00 a:5 b:5 00100010 ax:1 bx:1 0
+
+# format:XX3 book:I page:886 v3.01 xvi8ger4 VSX Vector 8-bit Signed/Unsigned Integer GER (rank-4 update)
+XVI8GER4 PPC64LE       111011 at:3 00 a:5 b:5 00000011 ax:1 bx:1 0
+
+# format:XX3 book:I page:886 v3.01 xvi8ger4pp VSX Vector 8-bit Signed/Unsigned Integer GER (rank-4 update) Positive multiply, Positive accumulate
+XVI8GER4PP PPC64LE     111011 at:3 00 a:5 b:5 00000010 ax:1 bx:1 0
+
+# format:XX3 book:I page:889 v3.01 xvi8ger4spp VSX Vector 8-bit Signed/Unsigned Integer GER (rank-4 update) with Saturate Positive multiply, Positive accumulate
+XVI8GER4SPP PPC64LE    111011 at:3 00 a:5 b:5 01100011 ax:1 bx:1 0
 
 # format:XX3 book:I page:704 v3.0 xviexpdp VSX Vector Insert Exponent DP
 XVIEXPDP PPC64LE 111100 t:5 a:5 b:5 11111000 ax:1 bx:1 tx:1
@@ -3697,11 +3865,17 @@ XXLORC PPC64LE 111100 t:5 a:5 b:5 10101010 ax:1 bx:1 tx:1
 # format:XX3 book:I page:774 v2.06 xxlxor VSX Vector Logical XOR
 XXLXOR PPC64LE 111100 t:5 a:5 b:5 10011010 ax:1 bx:1 tx:1
 
+# format:X  book:I page 983 v3.1 xxmfacc VSX Move From Accumulator
+XXMFACC PPC64LE 011111 as:3 00 00000 00000 0010110001 0
+
 # format:XX3 book:I page:775 v2.06 xxmrghw VSX Vector Merge Word High
 XXMRGHW PPC64LE 111100 t:5 a:5 b:5 00010010 ax:1 bx:1 tx:1
 
 # format:XX3 book:I page:775 v2.06 xxmrglw VSX Vector Merge Word Low
 XXMRGLW PPC64LE 111100 t:5 a:5 b:5 00110010 ax:1 bx:1 tx:1
+
+# format:X  book:I page 984 v3.1 xxmtacc VSX Move To Accumulator
+XXMTACC PPC64LE 011111 at:3 00 00001 00000 0010110001 0
 
 # format:XX3 book:I page:776 v3.0 xxperm VSX Vector Permute
 XXPERM PPC64LE 111100 t:5 a:5 b:5 00011010 ax:1 bx:1 tx:1
@@ -3714,6 +3888,9 @@ XXPERMR PPC64LE 111100 t:5 a:5 b:5 00111010 ax:1 bx:1 tx:1
 
 # format:XX4 book:I page:777 v2.06 xxsel VSX Vector Select
 XXSEL PPC64LE 111100 t:5 a:5 b:5 c:5 11 cx:1 ax:1 bx:1 tx:1
+
+# format:X  book:I page 989 v3.1 xxsetaccz VSX Set Accumulator to Zero
+XXSETACCZ PPC64LE 011111 at:3 00 00011 00000 0010110001 0
 
 # format:XX3 book:I page:778 v2.06 xxsldwi VSX Vector Shift Left Double by Word Immediate
 XXSLDWI PPC64LE 111100 t:5 a:5 b:5 0 shw:2 00010 ax:1 bx:1 tx:1
