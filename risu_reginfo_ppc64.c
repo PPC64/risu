@@ -21,6 +21,7 @@
 #include "risu.h"
 #include "risu_reginfo_ppc64.h"
 
+#define CTR 35
 #define XER 37
 #define CCR 38
 
@@ -49,6 +50,7 @@ void reginfo_init(struct reginfo *ri, ucontext_t *uc)
     memset(ri, 0, sizeof(*ri));
 
     ri->faulting_insn = *((uint32_t *) uc->uc_mcontext.regs->nip);
+    ri->prev_insn = *((uint32_t *) (uc->uc_mcontext.regs->nip - 4));
     ri->nip = uc->uc_mcontext.regs->nip - image_start_address;
 
     for (i = 0; i < NGREG; i++) {
@@ -56,12 +58,24 @@ void reginfo_init(struct reginfo *ri, ucontext_t *uc)
     }
 
     memcpy(ri->fpregs, uc->uc_mcontext.fp_regs, 32 * sizeof(double));
-    ri->fpscr = uc->uc_mcontext.fp_regs[32];
+    memcpy(&ri->fpscr, &uc->uc_mcontext.fp_regs[32], sizeof(uint64_t));
+    ri->fpscr &= ~0x40000; /* ignore FR bit */
 
     memcpy(ri->vrregs.vrregs, uc->uc_mcontext.v_regs->vrregs,
            sizeof(ri->vrregs.vrregs[0]) * 32);
     ri->vrregs.vscr = uc->uc_mcontext.v_regs->vscr;
     ri->vrregs.vrsave = uc->uc_mcontext.v_regs->vrsave;
+
+    for (i = 0; i < 32; i++) {
+        /*
+         * From sigcontext.h:
+         * "FPR/VSR 0-31 doubleword 0 is stored in fp_regs, and VMX/VSR 32-63
+         * is stored at the start of vmx_reserve.  vmx_reserve is extended for
+         * backwards compatility to store VSR 0-31 doubleword 1 after the VMX
+         * registers and vscr/vrsave."
+         */
+        ri->vsrreghalf[i] = uc->uc_mcontext.vmx_reserve[2 * NVRREG + 1 + i];
+    }
 }
 
 /* reginfo_is_eq: compare the reginfo structs, returns nonzero if equal */
@@ -78,11 +92,15 @@ int reginfo_is_eq(struct reginfo *m, struct reginfo *a)
         }
     }
 
+    if (m->gregs[CTR] != a->gregs[CTR]) {
+        return 0;
+    }
+
     if (m->gregs[XER] != a->gregs[XER]) {
         return 0;
     }
 
-    if ((m->gregs[CCR] & 0x10) != (a->gregs[CCR] & 0x10)) {
+    if ((m->gregs[CCR]) != (a->gregs[CCR])) {
         return 0;
     }
 
@@ -90,6 +108,10 @@ int reginfo_is_eq(struct reginfo *m, struct reginfo *a)
         if (m->fpregs[i] != a->fpregs[i]) {
             return 0;
         }
+    }
+
+    if (m->fpscr != a->fpscr) {
+        return 0;
     }
 
     for (i = 0; i < 32; i++) {
@@ -100,6 +122,21 @@ int reginfo_is_eq(struct reginfo *m, struct reginfo *a)
             return 0;
         }
     }
+
+    for (i = 0; i < 32; i++) {
+        if (m->vsrreghalf[i] != a->vsrreghalf[i]) {
+            return 0;
+        }
+    }
+
+    if (m->vrregs.vscr.vscr_word != a->vrregs.vscr.vscr_word) {
+        return 0;
+    }
+
+    if (m->vrregs.vrsave != a->vrregs.vrsave) {
+        return 0;
+    }
+
     return 1;
 }
 
@@ -143,6 +180,13 @@ int reginfo_dump(struct reginfo *ri, FILE * f)
                 ri->vrregs.vrregs[i][0], ri->vrregs.vrregs[i][1],
                 ri->vrregs.vrregs[i][2], ri->vrregs.vrregs[i][3]);
     }
+    fprintf(f, "\tvscr: %8x\tvrsave: %8x\n", ri->vrregs.vscr.vscr_word,
+            ri->vrregs.vrsave);
+
+    for (i = 0; i < 32; i++) {
+        fprintf(f, "vsr%02d: %16lx, %16lx\n", i, ri->fpregs[i],
+                ri->vsrreghalf[i]);
+    }
 
     return !ferror(f);
 }
@@ -160,6 +204,11 @@ int reginfo_dump_mismatch(struct reginfo *m, struct reginfo *a, FILE *f)
             fprintf(f, "master: [%lx] - apprentice: [%lx]\n",
                     m->gregs[i], a->gregs[i]);
         }
+    }
+
+    if (m->gregs[CTR] != a->gregs[CTR]) {
+        fprintf(f, "Mismatch: CTR\n");
+        fprintf(f, "m: [%lx] != a: [%lx]\n", m->gregs[CTR], a->gregs[CTR]);
     }
 
     if (m->gregs[XER] != a->gregs[XER]) {
@@ -180,6 +229,11 @@ int reginfo_dump_mismatch(struct reginfo *m, struct reginfo *a, FILE *f)
         }
     }
 
+    if (m->fpscr != a->fpscr) {
+        fprintf(f, "Mismatch: FPSCR\n");
+        fprintf(f, "m: [0x%016lx] != a: [0x%016lx]\n", m->fpscr, a->fpscr);
+    }
+
     for (i = 0; i < 32; i++) {
         if (m->vrregs.vrregs[i][0] != a->vrregs.vrregs[i][0] ||
             m->vrregs.vrregs[i][1] != a->vrregs.vrregs[i][1] ||
@@ -194,5 +248,28 @@ int reginfo_dump_mismatch(struct reginfo *m, struct reginfo *a, FILE *f)
                     a->vrregs.vrregs[i][2], a->vrregs.vrregs[i][3]);
         }
     }
+
+    if (m->vrregs.vscr.vscr_word != a->vrregs.vscr.vscr_word) {
+        fprintf(f, "Mismatch: VSCR\n");
+        fprintf(f, "m: [%8x] != a: [%8x]\n", m->vrregs.vscr.vscr_word,
+                a->vrregs.vscr.vscr_word);
+    }
+
+    if (m->vrregs.vrsave != a->vrregs.vrsave) {
+        fprintf(f, "Mismatch: VRSAVE\n");
+        fprintf(f, "m: [%8x] != a: [%8x]\n", m->vrregs.vrsave,
+                a->vrregs.vrsave);
+    }
+
+    for (i = 0; i < 32; i++) {
+        if (m->vsrreghalf[i] != a->vsrreghalf[i]) {
+            fprintf(f, "Mismatch: Register vsr%d\n", i);
+            fprintf(f, "m: [%16lx, %16lx] != a: [%16lx, %16lx]\n",
+                    m->fpregs[i], m->vsrreghalf[i],
+                    a->fpregs[i], a->vsrreghalf[i]);
+            return 0;
+        }
+    }
+
     return !ferror(f);
 }

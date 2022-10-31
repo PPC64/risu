@@ -134,13 +134,44 @@ sub write_random_ppc64_fpdata()
 
 sub write_random_ppc64_vrdata()
 {
+    # Vector Status and Control Register
+    insn32(0x100004c4); # vxor vr0, vr0, vr0
+    insn32(0x10000644); # mtvscr vr0
+
+    # VR Save Register
+    write_mov_ri(0, rand(0xffffffff));
+    insn32(0x7c0043a6); # mtvrsave r0
+
     for (my $i = 0; $i < 32; $i++) {
         # load a random doubleword value at r0
-        write_mov_ri128(rand(0xffff), rand(0xffff), rand(0xfffff), rand(0xfffff));
+        write_mov_ri128(rand(0xffffffff), rand(0xffffffff), rand(0xffffffff), rand(0xffffffff));
         # li r0, 16
         write_mov_ri16(0, 0x10);
         # lvx vr$i, r1, r0
         insn32((0x1f << 26) | ($i << 21) | (0x1 << 16) | 0x2ce);
+    }
+}
+
+sub write_random_ppc64_vsrdata()
+{
+    # Vector Status and Control Register
+    insn32(0x100004c4); # vxor vr0, vr0, vr0
+    insn32(0x10000644); # mtvscr vr0
+
+    # VR Save Register
+    write_mov_ri(0, rand(0xffffffff));
+    insn32(0x7c0043a6); # mtvrsave r0
+
+    for (my $i = 0; $i < 32; $i++) {
+        # load a random quadword value at r0
+        write_mov_ri128(rand(0xffffffff), rand(0xffffffff), rand(0xffffffff), rand(0xffffffff));
+        # lxv vsr[$i], 16(r1)
+        insn32((0x3d << 26) | ($i << 21) | (0x1 << 16) | (0x0 << 4) | 0x1);
+
+        # load another random quadword value at r0
+        write_mov_ri128(rand(0xffffffff), rand(0xffffffff), rand(0xffffffff), rand(0xffffffff));
+        # lxv vsr[$i+32], 16(r1)
+        insn32((0x3d << 26) | ($i << 21) | (0x1 << 16) | (0x1 << 4) | 0x1);
     }
 }
 
@@ -159,6 +190,10 @@ sub write_random_regdata()
         }
         write_mov_ri($i, rand(0xffffffff));
     }
+
+    # Count register
+    write_mov_ri(0, rand(0xffffffff));
+    insn32(0x7c0903a6); # mtctr r0
 }
 
 sub clear_vr_registers()
@@ -170,6 +205,9 @@ sub clear_vr_registers()
     # zero the xer register
     # mtxer   r23
     insn32(0x7ee103a6);
+    # zero the ccr register
+    # mtcrf   0xff,r23
+    insn32(0x7eeff120);
     # std r23, 0(r22)
     insn32(0xfaf60000);
 
@@ -185,16 +223,20 @@ my $OP_SETMEMBLOCK = 2;    # r0 is address of memory block (8192 bytes)
 my $OP_GETMEMBLOCK = 3;    # add the address of memory block to r0
 my $OP_COMPAREMEM = 4;     # compare memory block
 
-sub write_random_register_data($)
+sub write_random_register_data($$)
 {
-    my ($fp_enabled) = @_;
+    my ($fp_enabled, $vsx_enabled) = @_;
 
     clear_vr_registers();
 
-    write_random_ppc64_vrdata();
-    if ($fp_enabled) {
-        # load floating point / SIMD registers
-        write_random_ppc64_fpdata();
+    if ($vsx_enabled) {
+        write_random_ppc64_vsrdata();
+    } else {
+        write_random_ppc64_vrdata();
+        if ($fp_enabled) {
+            # load floating point / SIMD registers
+            write_random_ppc64_fpdata();
+        }
     }
 
     write_random_regdata();
@@ -203,12 +245,11 @@ sub write_random_register_data($)
 
 sub write_memblock_setup()
 {
-    # li r2, 0
-    write_mov_ri(2, 0);
-    for (my $i = 0; $i < 10000; $i = $i + 8) {
-        # std r2, 0(r1)
-        my $imm = -$i;
-        insn32((0x3e << 26) | (2 << 21) | (1 << 16) | ($imm & 0xffff));
+    for (my $i = 0; $i < 1024; $i = $i + 1) {
+        # li r2, $rand
+        write_mov_ri(2, rand(0xffffffff));
+        # stdu r2, -8(r1)
+        insn32((0x3e << 26) | (2 << 21) | (1 << 16) | (-8 & 0xffff) | 1);
     }
 }
 
@@ -297,7 +338,7 @@ sub gen_one_insn($$)
 
     INSN: while(1) {
         my ($forcecond, $rec) = @_;
-        my $insn = int(rand(0xffffffff));
+        my $insn = int(rand(0xffffffff)) << 32 | int(rand(0xffffffff));
         my $insnname = $rec->{name};
         my $insnwidth = $rec->{width};
         my $fixedbits = $rec->{fixedbits};
@@ -338,7 +379,19 @@ sub gen_one_insn($$)
             $basereg = eval_with_fields($insnname, $insn, $rec, "memory", $memblock);
         }
 
-        insn32($insn);
+        if ($insnwidth == 64) {
+            if((($bytecount+4) & 63) == 0) {
+                # Power v3.1, section 1.9 Exceptions:
+                # attempt to execute a prefixed instruction that crosses a
+                # 64-byte address boundary (system alignment error).
+                # Emit a NOP before the next prefixed instruction
+                insn32(0x60000000);
+            }
+            insn32($insn >> 32);
+            insn32($insn & 0xffffffff);
+        } else {
+            insn32($insn >> 32);
+        }
 
         if (defined $memblock) {
             # Clean up following a memory access instruction:
@@ -369,6 +422,7 @@ sub write_test_code($)
     my $condprob = $params->{ 'condprob' };
     my $numinsns = $params->{ 'numinsns' };
     my $fp_enabled = $params->{ 'fp_enabled' };
+    my $vsx_enabled = $params->{ 'vsx_enabled' };
     my $outfile = $params->{ 'outfile' };
 
     my %insn_details = %{ $params->{ 'details' } };
@@ -395,7 +449,7 @@ sub write_test_code($)
     }
 
     # memblock setup doesn't clean its registers, so this must come afterwards.
-    write_random_register_data($fp_enabled);
+    write_random_register_data($fp_enabled, $vsx_enabled);
 
     for my $i (1..$numinsns) {
         my $insn_enc = $keys[int rand (@keys)];
@@ -406,7 +460,7 @@ sub write_test_code($)
         # Rewrite the registers periodically. This avoids the tendency
         # for the VFP registers to decay to NaNs and zeroes.
         if ($periodic_reg_random && ($i % 100) == 0) {
-            write_random_register_data($fp_enabled);
+            write_random_register_data($fp_enabled, $vsx_enabled);
         }
         progress_update($i);
     }
