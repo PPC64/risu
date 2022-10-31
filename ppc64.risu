@@ -1534,6 +1534,20 @@ ORIS PPC64LE 011001 rs:5 ra:5 imm:16 \
 PADDI PPC64LE 000001 10 000 r:1 00 si0:18 001110 rt:5 ra:5 si1:16 \
 !constraints { $rt != 1 && $ra != 1 && $rt != 13 && $ra != 13; }
 
+# format:8LS:D book:I page:618 v3.1B plxsd Prefixed Load VSX Scalar Doubleword
+PLXSD PPC64LE 000001 00000 0 00 d0:18 \
+              101010 rt:5 ra:5 d1:16 \
+!constraints { $ra != 0 && $ra != 1 && $ra != 13 && \
+    $d0 <= 65535 && $d1 <= 32767 } \
+!memory { reg_plus_imm($ra, ($d0 << 16) | $d1); }
+
+# format:8LS:D book:I page:623 v3.1B plxssp Prefixed Load VSX Scalar Single-Precision
+PLXSSP PPC64LE 000001 00000 0 00 d0:18 \
+               101011 rt:5 ra:5 d1:16 \
+!constraints { $ra != 0 && $ra != 1 && $ra != 13 && \
+    $d0 <= 65535 && $d1 <= 32767 } \
+!memory { reg_plus_imm($ra, ($d0 << 16) | $d1); }
+
 # format:XX3 book:I page:827 v3.01 xvbf16ger2   Prefixed Masked VSX Vector bfloat16 GER (rank-2 update)
 PMXVBF16GER2 PPC64LE     000001 11 1001 00 0 0 pmsk:2 000000 xmks:4 ymsk:4              \
                          111011 at:3 00 a:5 b:5 00110011 ax:1 bx:1 0
@@ -1669,6 +1683,20 @@ PRTYD PPC64LE 011111 rs:5 ra:5 0000000101110100 \
 # format:X book:I page:97 v2.05 prtyw Parity Word
 PRTYW PPC64LE 011111 rs:5 ra:5 0000000100110100 \
 !constraints { $rs != 1 && $ra != 1 && $rs != 13 && $ra != 13; }
+
+# format:8LS:D book:I page:646 v3.1B pstxsd Prefixed Store VSX Scalar Doubleword
+PSTXSD PPC64LE 000001 00000 0 00 d0:18 \
+               101110 rs:5 ra:5 d1:16 \
+!constraints { $ra != 0 && $ra != 1 && $ra != 13 && \
+    $d0 <= 65535 && $d1 <= 32767 } \
+!memory { reg_plus_imm($ra, ($d0 << 16) | $d1); }
+
+# format:8LS:D book:I page:650 v3.1B pstxssp Prefixed Store VSX Scalar Single-Precision
+PSTXSSP PPC64LE 000001 00000 0 00 d0:18 \
+                101111 rs:5 ra:5 d1:16 \
+!constraints { $ra != 0 && $ra != 1 && $ra != 13 && \
+    $d0 <= 65535 && $d1 <= 32767 } \
+!memory { reg_plus_imm($ra, ($d0 << 16) | $d1); }
 
 # format:MDS book:I page:103 PPC SR rldcl Rotate Left Dword then Clear Left
 RLDCL PPC64LE 011110 rs:5 ra:5 rb:5 mb:6 10000 \
