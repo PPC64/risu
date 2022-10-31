@@ -220,6 +220,10 @@ CNTLZD PPC64LE 011111 rs:5 ra:5 0000000001110100 \
 CNTLZDd PPC64LE 011111 rs:5 ra:5 0000000001110101 \
 !constraints { $rs != 1 && $ra != 1 && $rs != 13 && $ra != 13; }
 
+# format:X book:I page:105 v3.1 cntlzdm Count Leading Zeros Doubleword under bit Mask
+CNTLZDM PPC64LE 011111 rs:5 ra:5 rb:5 0000111011 0 \
+!constraints { $rs != 1 && $ra != 1 && $rb != 1 && $rs != 13 && $ra != 13 && $rb != 13;}
+
 # format:X book:I page:95 v:P1 SR cntlzw Count Leading Zeros Word
 CNTLZW PPC64LE 011111 rs:5 ra:5 0000000000110100 \
 !constraints { $rs != 1 && $ra != 1 && $rs != 13 && $ra != 13; }
@@ -233,6 +237,10 @@ CNTTZD PPC64LE 011111 rs:5 ra:5 0000010001110100 \
 # format:X book:I page:98 v3.0 cnttzd. Count Trailing Zeros Dword
 CNTTZDd PPC64LE 011111 rs:5 ra:5 0000010001110101 \
 !constraints { $rs != 1 && $ra != 1 && $rs != 13 && $ra != 13; }
+
+# format:X book:I page:105 v3.1 cnttzdm Count Trailing Zeros Doubleword under bit Mask
+CNTTZDM PPC64LE 011111 rs:5 ra:5 rb:5 1000111011 0 \
+!constraints { $rs != 1 && $ra != 1 && $rb != 1 && $rs != 13 && $ra != 13 && $rb != 13;}
 
 # format:X book:I page:95 v3.0 cnttzw Count Trailing Zeros Word
 CNTTZW PPC64LE 011111 rs:5 ra:5 0000010000110100 \
@@ -1260,6 +1268,26 @@ LXVLL PPC64LE 011111 t:5 ra:5 rb:5 0100101101 tx:1 \
 !constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
 !memory { write_mov_ri($rb, rand(0xff)); reg($ra); }
 
+# format:X book:I page:635 v3.1 lxvrbx Load VSX Vector Rightmost Byte Indexed
+LXVRBX PPC64LE 011111 t:5 ra:5 rb:5 0000001101 tx:1 \
+!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
+!memory { reg_plus_reg($ra, $rb); }
+
+# format:X book:I page:636 v3.1 lxvrdx Load VSX Vector Rightmost Doubleword Indexed
+LXVRDX PPC64LE 011111 t:5 ra:5 rb:5 0001101101 tx:1 \
+!constraints { $ra != $rb && $ra != 0 && $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13; } \
+!memory { reg_plus_reg($ra, $rb); }
+
+# format:X book:I page:637 v3.1 lxvrhx Load VSX Vector Rightmost Halfword Indexed
+LXVRHX PPC64LE 011111 t:5 ra:5 rb:5 0000101101 tx:1 \
+!constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
+!memory { reg_plus_reg($ra, $rb); }
+
+# format:X book:I page:638 v3.1 lxvrwx Load VSX Vector Rightmost Word Indexed
+LXVRWX PPC64LE 011111 t:5 ra:5 rb:5 0001001101 tx:1 \
+!constraints { $ra != $rb && $ra != 0 && $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13; } \
+!memory { reg_plus_reg($ra, $rb); }
+
 # format:XX1 book:I page:497 v2.06 lxvw4x Load VSX Vector Word*4 Indexed
 LXVW4X PPC64LE 011111 t:5 ra:5 rb:5 1100001100 tx:1 \
 !constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
@@ -1913,6 +1941,26 @@ STXVLL PPC64LE 011111 s:5 ra:5 rb:5 01101 01101 sx:1 \
 !constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
 !memory { write_mov_ri($rb, rand(0xff)); reg($ra); }
 
+# format:X book:I page:659 v3.1 stxvrbx Store VSX Vector Rightmost Byte Indexed
+STXVRBX PPC64LE 011111 s:5 ra:5 rb:5 0010001101 sx:1 \
+!constraints { $ra != 0 && $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
+!memory { reg_plus_reg($ra, $rb); }
+
+# format:X book:I page:659 v3.1 stxvrdx Store VSX Vector Rightmost Doubleword Indexed
+STXVRDX PPC64LE 011111 s:5 ra:5 rb:5 0011101101 sx:1 \
+!constraints { $ra != 0 && $ra != $rb && $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13; } \
+!memory { reg_plus_reg($ra, $rb); }
+
+# format:X book:I page:660 v3.1 stxvrhx Store VSX Vector Rightmost Halfword Indexed
+STXVRHX PPC64LE 011111 s:5 ra:5 rb:5 0010101101 sx:1 \
+!constraints { $ra != $rb && $ra != 0 && $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13; } \
+!memory { reg_plus_reg($ra, $rb); }
+
+# format:X book:I page:660 v3.1 stxvrwx Store VSX Vector Rightmost Word Indexed
+STXVRWX PPC64LE 011111 s:5 ra:5 rb:5 0011001101 sx:1 \
+!constraints { $ra != $rb && $ra != 0 && $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13; } \
+!memory { reg_plus_reg($ra, $rb); }
+
 # format:XX1 book:I page:507 v2.06 stxvw4x Store VSX Vector Word*4 Indexed
 STXVW4X PPC64LE 011111 s:5 ra:5 rb:5 11100 01100 sx:1 \
 !constraints { $ra != 1 && $rb != 1 && $ra != 13 && $rb != 13 && $ra != 0 && $ra != $rb; } \
@@ -2109,6 +2157,14 @@ VCIPHER PPC64LE 000100 vrt:5 vra:5 vrb:5 10100001000
 # format:VX book:I page:336 v2.07 vcipherlast Vector AES Cipher Last
 VCIPHERLAST PPC64LE 000100 vrt:5 vra:5 vrb:5 10100001001
 
+# format:VX book:I page:481 v3.1 vclrlb Vector Clear Leftmost Bytes
+VCLRLB PPC64LE 000100 vrt:5 vra:5 rb:5 00110001101 \
+!constraints { $rb != 1 && $rb != 13; }
+
+# format:VX book:I page:481 v3.1 vclrrb Vector Clear Rightmost Bytes
+VCLRRB PPC64LE 000100 vrt:5 vra:5 rb:5 00111001101 \
+!constraints { $rb != 1 && $rb != 13; }
+
 # format:VX book:I page:343 v2.07 vclzb Vector Count Leading Zeros Byte
 VCLZB PPC64LE 000100 vrt:5 00000 vrb:5 11100000010
 
@@ -2150,6 +2206,11 @@ VCMPEQUH PPC64LE 000100 vrt:5 vra:5 vrb:5 00001000110
 # format:VC book:I page:306 v2.03 vcmpequh[.] Vector Compare Equal Unsigned Hword
 VCMPEQUHd PPC64LE 000100 vrt:5 vra:5 vrb:5 10001000110
 
+# format:VC book:I page:392 v3.1 vcmpequq[.] Vector Compare Equal Unsigned Word
+VCMPEQUQ PPC64LE 000100 vrt:5 vra:5 vrb:5 00111000111
+# format:VC book:I page:392 v3.1 vcmpequq[.] Vector Compare Equal Unsigned Word
+VCMPEQUQd PPC64LE 000100 vrt:5 vra:5 vrb:5 10111000111
+
 # format:VC book:I page:307 v2.03 vcmpequw[.] Vector Compare Equal Unsigned Word
 VCMPEQUW PPC64LE 000100 vrt:5 vra:5 vrb:5 00010000110
 # format:VC book:I page:307 v2.03 vcmpequw[.] Vector Compare Equal Unsigned Word
@@ -2180,6 +2241,11 @@ VCMPGTSH PPC64LE 000100 vrt:5 vra:5 vrb:5 01101000110
 # format:VC book:I page:309 v2.03 vcmpgtsh[.] Vector Compare Greater Than Signed Hword
 VCMPGTSHd PPC64LE 000100 vrt:5 vra:5 vrb:5 11101000110
 
+# format:VC book:I page:397 v3.1 vcmpgtsq[.] Vector Compare Greater Than Signed Qword
+VCMPGTSQ PPC64LE 000100 vrt:5 vra:5 vrb:5 01110000111
+# format:VC book:I page:397 v3.1 vcmpgtsq[.] Vector Compare Greater Than Signed Qword
+VCMPGTSQd PPC64LE 000100 vrt:5 vra:5 vrb:5 11110000111
+
 # format:VC book:I page:309 v2.03 vcmpgtsw[.] Vector Compare Greater Than Signed Word
 VCMPGTSW PPC64LE 000100 vrt:5 vra:5 vrb:5 01110000110
 # format:VC book:I page:309 v2.03 vcmpgtsw[.] Vector Compare Greater Than Signed Word
@@ -2199,6 +2265,11 @@ VCMPGTUDd PPC64LE 000100 vrt:5 vra:5 vrb:5 11011000111
 VCMPGTUH PPC64LE 000100 vrt:5 vra:5 vrb:5 01001000110
 # format:VC book:I page:311 v2.03 vcmpgtuh[.] Vector Compare Greater Than Unsigned Hword
 VCMPGTUHd PPC64LE 000100 vrt:5 vra:5 vrb:5 11001000110
+
+# format:VC book:I page:397 v3.1 vcmpgtuh[.] Vector Compare Greater Than Unsigned Qword
+VCMPGTUQ PPC64LE 000100 vrt:5 vra:5 vrb:5 01010000111
+# format:VC book:I page:397 v3.1 vcmpgtuh[.] Vector Compare Greater Than Unsigned Qword
+VCMPGTUQd PPC64LE 000100 vrt:5 vra:5 vrb:5 11010000111
 
 # format:VC book:I page:311 v2.03 vcmpgtuw[.] Vector Compare Greater Than Unsigned Word
 VCMPGTUW PPC64LE 000100 vrt:5 vra:5 vrb:5 01010000110
@@ -2234,6 +2305,28 @@ VCMPNEZHd PPC64LE 000100 vrt:5 vra:5 vrb:5 10101000111
 VCMPNEZW PPC64LE 000100 vrt:5 vra:5 vrb:5 00110000111
 # format:VC book:I page:314 v3.0 vcmpnezw[.] Vector Compare Not Equal or Zero Word
 VCMPNEZWd PPC64LE 000100 vrt:5 vra:5 vrb:5 10110000111
+
+# format:VC book:I page:401 v3.1 vcmpsq Vector Compare Signed Quadword
+VCMPSQ PPC64LE 000100 bf:3 00 vrt:5 vra:5 00101000001
+
+# format:VC book:I page:401 v3.1 vcmpsq Vector Compare Unsigned Quadword
+VCMPUQ PPC64LE 000100 bf:3 00 vrt:5 vra:5 00100000001
+
+# format:VC book:I page:474 v3.1 vcntmbb Vector Count Mask Bits Byte
+VCNTMBB PPC64LE 000100 rt:5 1100 mp:1 vrb:5 11001000010 \
+!constraints { $rt != 1 && $rt != 13; }
+
+# format:VC book:I page:475 v3.1 vcntmbd Vector Count Mask Bits Doubleword
+VCNTMBD PPC64LE 000100 rt:5 1111 mp:1 vrb:5 11001000010 \
+!constraints { $rt != 1 && $rt != 13; }
+
+# format:VC book:I page:474 v3.1 vcntmbh Vector Count Mask Bits Halfword
+VCNTMBH PPC64LE 000100 rt:5 1101 mp:1 vrb:5 11001000010 \
+!constraints { $rt != 1 && $rt != 13; }
+
+# format:VC book:I page:475 v3.1 vcntmbw Vector Count Mask Bits Word
+VCNTMBW PPC64LE 000100 rt:5 1110 mp:1 vrb:5 11001000010 \
+!constraints { $rt != 1 && $rt != 13; }
 
 # format:VX book:I page:327 v2.03 vctsxs Vector Convert To Signed Word Saturate
 VCTSXS PPC64LE 000100 vrt:5 uim:5 vrb:5 01111001010
@@ -2316,6 +2409,10 @@ VEXTUWRX PPC64LE 000100 rt:5 ra:5 vrb:5 11110001101 \
 
 # format:VX book:I page:342 v2.07 vgbbd Vector Gather Bits by Byte by Dword
 VGBBD PPC64LE 000100 vrt:5 00000 vrb:5 10100001100
+
+# format:VX book:I page:451 v3.1 vgnb Vector Gather every Nth Bit
+VGNB PPC64LE 000100 rt:5 00 n:3 vrb:5 10011001100 \
+!constraints { $rt != 1 && $rt != 13 && $n > 1; }
 
 # format:VX book:I page:270 v3.0 vinsertb Vector Insert Byte
 VINSERTB PPC64LE 000100 vrt:5 0 uim:4 vrb:5 01100001101
@@ -2422,6 +2519,9 @@ VMRGOW PPC64LE 000100 vrt:5 vra:5 vrb:5 11010001100
 # format:VA book:I page:288 v2.03 vmladduhm Vector Multiply-Low-Add Unsigned Hword Modulo
 VMLADDUHM PPC64LE 000100 vrt:5 vra:5 vrb:5 vrc:5 100010
 
+# format:VA book:I page:362 v3.1 vmsumcud Vector Multiply-Sum & write Carry-out Unsigned
+VMSUMCUD PPC64LE 000100 vrt:5 vra:5 vrb:5 vrc:5 010111
+
 # format:VA book:I page:289 v2.03 vmsummbm Vector Multiply-Sum Mixed Byte Modulo
 VMSUMMBM PPC64LE 000100 vrt:5 vra:5 vrb:5 vrc:5 100101
 
@@ -2433,6 +2533,9 @@ VMSUMSHS PPC64LE 000100 vrt:5 vra:5 vrb:5 vrc:5 101001
 
 # format:VA book:I page:288 v2.03 vmsumubm Vector Multiply-Sum Unsigned Byte Modulo
 VMSUMUBM PPC64LE 000100 vrt:5 vra:5 vrb:5 vrc:5 100100
+
+# format:VA book:I page:289 v3.0b vmsumudm Vector Multiply-Sum Unsigned Doubleword Modulo
+VMSUMUDM PPC64LE 000100 vrt:5 vra:5 vrb:5 vrc:5 100011
 
 # format:VA book:I page:290 v2.03 vmsumuhm Vector Multiply-Sum Unsigned Hword Modulo
 VMSUMUHM PPC64LE 000100 vrt:5 vra:5 vrb:5 vrc:5 100110
@@ -2629,6 +2732,15 @@ VRLDNM PPC64LE 000100 vrt:5 vra:5 vrb:5 00111000101
 # format:VX book:I page:318 v2.03 vrlh Vector Rotate Left Hword
 VRLH PPC64LE 000100 vrt:5 vra:5 vrb:5 00001000100
 
+# format:VX book:I page:410 v3.1 vrlq Vector Rotate Left Quadword
+VRLQ PPC64LE 000100 vrt:5 vra:5 vrb:5 00000000101
+
+# format:VX book:I page:417 v3.1 vrlqmi Vector Rotate Left Quadword then Mask Insert
+VRLQMI PPC64LE 000100 vrt:5 vra:5 vrb:5 00001000101
+
+# format:VX book:I page:414 v3.1 vrlqnm Vector Rotate Left Quadword then AND with Mask
+VRLQNM PPC64LE 000100 vrt:5 vra:5 vrb:5 00101000101
+
 # format:VX book:I page:318 v2.03 vrlw Vector Rotate Left Word
 VRLW PPC64LE 000100 vrt:5 vra:5 vrb:5 00010000100
 
@@ -2671,6 +2783,9 @@ VSLH PPC64LE 000100 vrt:5 vra:5 vrb:5 00101000100
 # format:VX book:I page:266 v2.03 vslo Vector Shift Left by Octet
 VSLO PPC64LE 000100 vrt:5 vra:5 vrb:5 10000001100
 
+# format:VX book:I page:420 v3.1 vslq Vector Shift Left Quadword
+VSLQ PPC64LE 000100 vrt:5 vra:5 vrb:5 00100000101
+
 # format:X book:I page:267 v3.0 vslv Vector Shift Left Variable
 VSLV PPC64LE 000100 vrt:5 vra:5 vrb:5 11101000100
 
@@ -2707,6 +2822,9 @@ VSRAD PPC64LE 000100 vrt:5 vra:5 vrb:5 01111000100
 # format:VX book:I page:321 v2.03 vsrah Vector Shift Right Algebraic Hword
 VSRAH PPC64LE 000100 vrt:5 vra:5 vrb:5 01101000100
 
+# format:VX book:I page:426 v3.1 vsraq Vector Shift Right Algebraic Quadword
+VSRAQ PPC64LE 000100 vrt:5 vra:5 vrb:5 01100000101
+
 # format:VX book:I page:321 v2.03 vsraw Vector Shift Right Algebraic Word
 VSRAW PPC64LE 000100 vrt:5 vra:5 vrb:5 01110000100
 
@@ -2716,17 +2834,43 @@ VSRB PPC64LE 000100 vrt:5 vra:5 vrb:5 01000000100
 # format:VX book:I page:320 v2.07 vsrd Vector Shift Right Dword
 VSRD PPC64LE 000100 vrt:5 vra:5 vrb:5 11011000100
 
+# format:VN boot:I page:299 v3.1 vsrdbi Vector Shift Right Double by Bit Immediate
+VSRDBI PPC64LE 000100 vrt:5 vra:5 vrb:5 01 sh:3 010110
+
 # format:VX book:I page:320 v2.03 vsrh Vector Shift Right Hword
 VSRH PPC64LE 000100 vrt:5 vra:5 vrb:5 01001000100
 
 # format:VX book:I page:266 v2.03 vsro Vector Shift Right by Octet
 VSRO PPC64LE 000100 vrt:5 vra:5 vrb:5 10001001100
 
+# format:VX book:I page:423 v3.1 vsrq Vector Shift Right Quadword
+VSRQ PPC64LE 000100 vrt:5 vra:5 vrb:5 01000000101
+
 # format:X book:I page:267 v3.0 vsrv Vector Shift Right Variable
 VSRV PPC64LE 000100 vrt:5 vra:5 vrb:5 11100000100
 
 # format:VX book:I page:320 v2.03 vsrw Vector Shift Right Word
 VSRW PPC64LE 000100 vrt:5 vra:5 vrb:5 01010000100
+
+# format:VX book:I page:479 v3.1 vstribl Vector String Isolate Byte Left-justified
+VSTRIBL PPC64LE 000100 vrt:5 00000 vrb:5 0 0000001101
+# format:VX book:I page:479 v3.1 vstribl. Vector String Isolate Byte Left-justified
+VSTRIBLd PPC64LE 000100 vrt:5 00000 vrb:5 1 0000001101
+
+# format:VX book:I page:480 v3.1 vstribr Vector String Isolate Byte Right-justified
+VSTRIBR PPC64LE 000100 vrt:5 00001 vrb:5 0 0000001101
+# format:VX book:I page:480 v3.1 vstribr. Vector String Isolate Byte Right-justified
+VSTRIBRd PPC64LE 000100 vrt:5 00001 vrb:5 1 0000001101
+
+# format:VX book:I page:480 v3.1 vstrihl Vector String Isolate Halfword Left-justified
+VSTRIHL PPC64LE 000100 vrt:5 00010 vrb:5 0 0000001101
+# format:VX book:I page:480 v3.1 vstrihl. Vector String Isolate Halfword Left-justified
+VSTRIHLd PPC64LE 000100 vrt:5 00010 vrb:5 1 0000001101
+
+# format:VX book:I page:479 v3.1 vstrihr Vector String Isolate Halfword Right-justified
+VSTRIHR PPC64LE 000100 vrt:5 00011 vrb:5 0 0000001101
+# format:VX book:I page:479 v3.1 vstrihr. Vector String Isolate Halfword Right-justified
+VSTRIHRd PPC64LE 000100 vrt:5 00011 vrb:5 1 0000001101
 
 # format:VX book:I page:281 v2.07 vsubcuq Vector Subtract & write Carry Unsigned Qword
 VSUBCUQ PPC64LE 000100 vrt:5 vra:5 vrb:5 10101000000
@@ -2856,6 +3000,9 @@ XSADDSP PPC64LE 111100 t:5 a:5 b:5 00000000 ax:1 bx:1 tx:1
 # format:XX3 book:I page:525 v3.0 xscmpeqdp VSX Scalar Compare Equal Double-Precision
 XSCMPEQDP PPC64LE 111100 t:5 a:5 b:5 00000011 ax:1 bx:1 tx:1
 
+# format:X book:I page:679 v3.1 xscmpeqqp VSX Scalar Compare Equal Quad-Precision
+XSCMPEQQP PPC64LE 111111 vrt:5 vra:5 vrb:5 0001000100 0
+
 # format:XX3 book:I page:523 v3.0 xscmpexpdp VSX Scalar Compare Exponents DP
 XSCMPEXPDP PPC64LE 111100 bf:3 00 a:5 b:5 00111011 ax:1 bx:1 0
 
@@ -2865,8 +3012,14 @@ XSCMPEXPQP PPC64LE 111111 bf:3 00 vra:5 vrb:5 00101001000
 # format:XX3 book:I page:526 v3.0 xscmpgedp VSX Scalar Compare Greater Than or Equal Double-Precision
 XSCMPGEDP PPC64LE 111100 t:5 a:5 b:5 00010011 ax:1 bx:1 tx:1
 
+# format:X book:I page:681 v3.1 xscmpgeqp VSX Scalar Compare Greater Than or Equal Quad-Precision
+XSCMPGEQP PPC64LE 111111 vrt:5 vra:5 vrb:5 0011000100 0
+
 # format:XX3 book:I page:527 v3.0 xscmpgtdp VSX Scalar Compare Greater Than Double-Precision
 XSCMPGTDP PPC64LE 111100 t:5 a:5 b:5 00001011 ax:1 bx:1 tx:1
+
+# format:X book:I page:683 v3.1 xscmpgtqp VSX Scalar Compare Greater Than Quad-Precision
+XSCMPGTQP PPC64LE 111111 vrt:5 vra:5 vrb:5 0011100100 0
 
 # format:XX3 book:I page:528 v3.0 xscmpnedp VSX Scalar Compare Not Equal Double-Precision
 XSCMPNEDP PPC64LE 111100 t:5 a:5 b:5 00011011 ax:1 bx:1 tx:1
@@ -2924,11 +3077,17 @@ XSCVQPDPo PPC64LE 111111 vrt:5 10100 vrb:5 11010001001
 # format:X book:I page:550 v3.0 xscvqpsdz VSX Scalar Convert QP to Signed Dword truncate
 XSCVQPSDZ PPC64LE 111111 vrt:5 11001 vrb:5 11010 001000
 
+# format:X book:I page:707 v3.1 xscvqpsqz VSX Scalar Convert with round to zero Quad-Precision to Signed Quadword
+XSCVQPSQZ PPC64LE 111111 vrt:5 01000 vrb:5 1101000100 0
+
 # format:X book:I page:552 v3.0 xscvqpswz VSX Scalar Convert QP to Signed Word truncate
 XSCVQPSWZ PPC64LE 111111 vrt:5 01001 vrb:5 11010 001000
 
 # format:X book:I page:554 v3.0 xscvqpudz VSX Scalar Convert QP to Unsigned Dword truncate
 XSCVQPUDZ PPC64LE 111111 vrt:5 10001 vrb:5 11010 001000
+
+# format:X book:I page:713 v3.1 xscvqpuqz VSX Scalar Convert with round to zero Quad-Precision to Unsigned Quadword
+XSCVQPUQZ PPC64LE 111111 vrt:5 00000 vrb:5 1101000100 0
 
 # format:X book:I page:556 v3.0 xscvqpuwz VSX Scalar Convert QP to Unsigned Word truncate
 XSCVQPUWZ PPC64LE 111111 vrt:5 00001 vrb:5 11010 001000
@@ -2942,6 +3101,9 @@ XSCVSPDP PPC64LE 111100 t:5 00000 b:5 10100 1001 bx:1 tx:1
 # format:XX2 book:I page:560 v2.07 xscvspdpn VSX Scalar Convert SP to DP Non-signalling
 XSCVSPDPN PPC64LE 111100 t:5 00000 b:5 10100 1011 bx:1 tx:1
 
+# format:X book:I page:719 v3.1 xscvsqqp VSX Scalar Convert with round Signed Quadword to Quad-Precision
+XSCVSQQP PPC64LE 111111 vrt:5 01011 vrb:5 1101000100 0
+
 # format:XX2 book:I page:561 v2.06 xscvsxddp VSX Scalar Convert Signed Dword to DP
 XSCVSXDDP PPC64LE 111100 t:5 00000 b:5 10111 1000 bx:1 tx:1
 
@@ -2950,6 +3112,9 @@ XSCVSXDSP PPC64LE 111100 t:5 00000 b:5 10011 1000 bx:1 tx:1
 
 # format:X book:I page:562 v3.0 xscvudqp VSX Scalar Convert Unsigned Dword to QP
 XSCVUDQP PPC64LE 111111 vrt:5 00010 vrb:5 11010 001000
+
+# format:X book:I page:723 v3.1 xscvuqqp VSX Scalar Convert with round Unsigned Quadword to Quad-Precision
+XSCVUQQP PPC64LE 111111 vrt:5 00011 vrb:5 1101000100 0
 
 # format:XX2 book:I page:563 v2.06 xscvuxddp VSX Scalar Convert Unsigned Dword to DP
 XSCVUXDDP PPC64LE 111100 t:5 00000 b:5 10110 1000 bx:1 tx:1
@@ -2995,6 +3160,9 @@ XSMADDQPo PPC64LE 111111 vrt:5 vra:5 vrb:5 01100 001001
 # format:XX3 book:I page:583 v3.0 xsmaxcdp VSX Scalar Maximum Type-C Double-Precision
 XSMAXCDP PPC64LE 111100 t:5 a:5 b:5 10000000 ax:1 bx:1 tx:1
 
+# format:X book:I page:746 v3.1 xsmaxcqp VSX Scalar Maximum Type-C Quad-Precision
+XSMAXCQP PPC64LE 111111 vrt:5 vra:5 vrb:5 1010100100 0
+
 # format:XX3 book:I page:581 v2.06 xsmaxdp VSX Scalar Maximum DP
 XSMAXDP PPC64LE 111100 t:5 a:5 b:5 10100000 ax:1 bx:1 tx:1
 
@@ -3003,6 +3171,9 @@ XMAXJDP PPC64LE 111100 t:5 a:5 b:5 10010000 ax:1 bx:1 tx:1
 
 # format:XX3 book:I page:589 v3.0 xsmincdp VSX Scalar Minimum Type-C Double-Precision
 XSMINCDP PPC64LE 111100 t:5 a:5 b:5 10001000 ax:1 bx:1 tx:1
+
+# format:X book:I page:754 v3.1 xsmincqp VSX Scalar Minimum Type-C Quad-Precision
+XSMINCQP PPC64LE 111111 vrt:5 vra:5 vrb:5 1011100100 0
 
 # format:XX3 book:I page:587 v2.06 xsmindp VSX Scalar Minimum DP
 XSMINDP PPC64LE 111100 t:5 a:5 b:5 10101000 ax:1 bx:1 tx:1
@@ -3445,6 +3616,9 @@ XVTDIVDP PPC64LE 111100  bf:3 00 a:5 b:5 01111101 ax:1 bx:1 0
 # format:XX3 book:I page:762 v2.06 xvtdivsp VSX Vector Test for software Divide SP
 XVTDIVSP PPC64LE 111100  bf:3 00 a:5 b:5 01011101 ax:1 bx:1 0
 
+# format:XX2 book:I page:968 v3.1 xvtlsbb VSX Vector Test Least-Significant Bit by Byte
+XVTLSBB PPC64LE 111100 bf:3 00 00010 b:5 111011011 bx:1 0
+
 # format:XX2 book:I page:763 v2.06 xvtsqrtdp VSX Vector Test for software Square Root DP
 XVTSQRTDP PPC64LE 111100 bf:3 0000000 b:5 011101010 bx:1 0
 
@@ -3483,6 +3657,18 @@ XXBRW PPC64LE 111100 t:5 01111 b:5 111011011 bx:1 tx:1
 
 # format:XX2 book:I page:770 v3.0 xxextractuw VSX Vector Extract Unsigned Word
 XXEXTRACTUW PPC64LE 111100 t:5 0 uim:4 b:5 010100101 bx:1 tx:1
+
+# format:X book:I page:979 v3.1 xxgenpcvbm VSX Vector Generate PCV from Byte Mask
+XXGENPCVBM PPC64LE 111100 t:5 000 imm:2 vrb:5 1110010100 tx:1
+
+# format:X book:I page:985 v3.1 xxgenpcvdm VSX Vector Generate PCV from Doubleword Mask
+XXGENPCVDM PPC64LE 111100 t:5 000 imm:2 vrb:5 1110110101 tx:1
+
+# format:X book:I page:981 v3.1 xxgenpcvhm VSX Vector Generate PCV from Halfword Mask
+XXGENPCVHM PPC64LE 111100 t:5 000 imm:2 vrb:5 1110010101 tx:1
+
+# format:X book:I page:983 v3.1 xxgenpcvwm VSX Vector Generate PCV from Word Mask
+XXGENPCVWM PPC64LE 111100 t:5 000 imm:2 vrb:5 1110110100 tx:1
 
 # format:XX2 book:I page:770 v3.0 xxinsertw VSX Vector Insert Word
 XXINSERTW PPC64LE 111100 t:5 0 uim:4 b:5 010110101 bx:1 tx:1
